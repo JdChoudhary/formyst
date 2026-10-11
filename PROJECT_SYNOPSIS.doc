@@ -1,0 +1,142 @@
+{\rtf1\ansi\deff0
+{\fonttbl{\f0 Calibri;}{\f1 Consolas;}}
+{\colortbl;\red31\green78\blue121;\red90\green90\blue90;}
+\paperw12240\paperh15840\margl1080\margr1080\margt900\margb900
+\viewkind4\uc1
+\pard\qc\sa240\b\f0\fs36 Formyst / Form Builder Project Synopsis\b0\par
+\pard\qc\sa120\cf2\fs22 Complete technical and product overview\cf0\par
+\pard\qc\sa240\fs20 Repository: D:\formik\line Date: 08 October 2026\par
+\pard\sa180\fs22\b Executive summary\b0\par
+\pard\sa120\fs20 Formyst is a full-stack, no-code form creation and response platform. It allows authenticated users to create forms, arrange them in folders, design fields and pages, define conditional logic, configure scoring and outcomes, customize themes and branding, publish forms, collect public responses, and review submission analytics. The product is implemented as a pnpm monorepo with a Next.js web application, an Express API application, shared Zod schemas and form utilities, a reusable form engine, database access through Drizzle ORM, Better Auth authentication, tRPC procedures, and domain services.\par
+\pard\sa120\fs20 The current product direction is a Typeform-style builder with both builder and respondent experiences. Recent work has focused on non-technical logic building, inline editing, single-page conditional behavior, start and thank-you screens, branded public forms, scrolling settings panels, and server-side enforcement of security controls.\par
+\pard\sa180\fs22\b 1. Product purpose and target users\b0\par
+\pard\sa120\fs20 The platform is intended for creators, teams, marketers, researchers, educators, and businesses that need to build polished forms without writing code. The interface emphasizes visual editing and plain-language controls so that a non-technical user can configure questions, conditional behavior, score calculations, branding, security, and submission behavior from the builder.\par
+\pard\sa120\fs20 Respondents access published forms through public routes. They may see a welcome page, branded question pages, multi-step navigation, conditional fields, progress indicators, password gates, autosave behavior, and a branded submission page depending on the form configuration.\par
+\pard\sa180\fs22\b 2. Repository and technology architecture\b0\par
+\pard\sa120\fs20 The repository is organized as a pnpm workspace:\par
+\pard\li360\sa60\fs20\b apps/web\b0 - Next.js 16 web application using React 19, Tailwind CSS, shadcn-style UI components, tRPC client hooks, and the public form renderer.\par
+\pard\li360\sa60\fs20\b apps/api\b0 - Express HTTP server that hosts the API integration and graceful database-aware process lifecycle.\par
+\pard\li360\sa60\fs20\b packages/shared\b0 - Shared form schemas, defaults, normalization, validation, field helpers, logic utilities, routing, recall interpolation, and theme-related types.\par
+\pard\li360\sa60\fs20\b packages/form-engine\b0 - Reusable runtime engine for logic evaluation, recall handling, and form execution primitives. It includes logic, recall, runtime, and test areas.\par
+\pard\li360\sa60\fs20\b packages/database\b0 - Drizzle ORM database package, PostgreSQL connectivity, schema definitions, migrations/configuration, and database exports.\par
+\pard\li360\sa60\fs20\b packages/services\b0 - Domain services for forms, responses, folders, users, themes, and related business operations.\par
+\pard\li360\sa60\fs20\b packages/trpc\b0 - Server routers, input/output validation, protected/public procedures, OpenAPI metadata, and client integration.\par
+\pard\li360\sa60\fs20\b packages/auth\b0 - Better Auth integration, database adapter wiring, session/authentication functionality, and auth-related services.\par
+\pard\li360\sa60\fs20\b packages/mail\b0 - Email infrastructure and templates.\par
+\pard\li360\sa60\fs20\b packages/logger\b0 - Shared logging utilities used by API and services.\par
+\pard\li360\sa60\fs20\b packages/typescript-config and packages/eslint-config\b0 - Shared development configuration.\par
+\pard\sa120\fs20 The workspace is defined in pnpm-workspace.yaml. The root scripts include build, dev, lint, format, check-types, and database commands. The main application dependencies include Next.js, React, Zod, tRPC, Better Auth, Drizzle, PostgreSQL, Tailwind, Capacitor, and Vitest.\par
+\pard\sa180\fs22\b 3. Main user journeys\b0\par
+\pard\sa120\fs20\b Form creator journey\b0\par
+\pard\li360\sa60\fs20 1. Sign up or sign in through Better Auth.\par
+\pard\li360\sa60\fs20 2. Open the workspace and create or select a form.\par
+\pard\li360\sa60\fs20 3. Optionally organize forms into nested folders.\par
+\pard\li360\sa60\fs20 4. Add fields from the builder field catalog.\par
+\pard\li360\sa60\fs20 5. Edit titles, descriptions, placeholders, options, validations, and field-specific settings inline or in the field settings panel.\par
+\pard\li360\sa60\fs20 6. Configure start pages, thank-you pages, theme, logo, social media, and platform branding.\par
+\pard\li360\sa60\fs20 7. Configure logic, variables, calculations, scoring, outcomes, and step routing.\par
+\pard\li360\sa60\fs20 8. Configure limits, security, notifications, API, webhooks, metadata, and other settings.\par
+\pard\li360\sa60\fs20 9. Preview the form, save a draft, publish, share, or embed it.\par
+\pard\sa120\fs20\b Respondent journey\b0\par
+\pard\li360\sa60\fs20 1. Open a public form by ID or slug.\par
+\pard\li360\sa60\fs20 2. Pass password protection if enabled.\par
+\pard\li360\sa60\fs20 3. See the optional welcome/start page.\par
+\pard\li360\sa60\fs20 4. Complete visible fields. Conditional rules can hide, show, enable, disable, or change required state.\par
+\pard\li360\sa60\fs20 5. Move through groups or steps. Routing rules can jump forward or skip groups.\par
+\pard\li360\sa60\fs20 6. Autosave progress and resume when supported.\par
+\pard\li360\sa60\fs20 7. Submit through the public response endpoint.\par
+\pard\li360\sa60\fs20 8. See quiz results or the branded thank-you/submission screen.\par
+\pard\sa180\fs22\b 4. Form schema and content model\b0\par
+\pard\sa120\fs20 The canonical form model is defined in packages/shared/form/form-schema.ts and exported through the shared form types. A form contains a title, mode, settings, theme, workspace metadata, hidden values, variables, variable definitions, calculations, welcome screens, thank-you screens, fields, groups, logic rules, scoring rules, outcomes, and timestamps.\par
+\pard\sa120\fs20 Fields are represented by a shared field schema. Field metadata includes a stable reference, type, title, description, properties, validations, layout, and other renderer-specific configuration. The field catalog supports text, long text, email, phone, website, number, date, choices, dropdowns, picture choices, checkbox, rating, NPS, opinion scale, yes/no, ranking, matrix, contact information, file upload, payment, group, signature, and related types present in the shared model.\par
+\pard\sa120\fs20 Recall tokens use readable references such as {{field:reference}}, {{variable:key}}, {{score}}, and {{price}}. The recall system renders tokens as chips/badges in editable UI while retaining their canonical raw representation for storage and interpolation.\par
+\pard\sa180\fs22\b 5. Builder experience\b0\par
+\pard\sa120\fs20 The builder is divided into build, design, logic, and settings surfaces. The classic builder canvas supports inline editing for field titles, descriptions, short-text placeholders, and long-text placeholders. The separate placeholder row was removed so the editing experience stays close to the actual respondent control.\par
+\pard\sa120\fs20 The question list renders recall tokens as readable chips instead of exposing raw token syntax. The inline recall editor preserves the contenteditable selection and inserts a selected token at the original caret position rather than always placing it at the beginning of a field.\par
+\pard\sa120\fs20 The preview runtime evaluates the same shared visibility logic used by the public renderer. It applies visible/hidden state, disabled state, required overrides, logic messages, variables, jump targets, skipped groups, and next-step routing. Single-page forms can use conditional logic even when they do not have multiple groups; step routing is hidden where it is not applicable.\par
+\pard\sa180\fs22\b 6. Logic, variables, scoring, and outcomes\b0\par
+\pard\sa120\fs20 Logic rules are represented in the shared schema and evaluated by shared utilities such as computeFieldVisibility and resolveStepRouting. Supported actions include jump, skip field, skip group, show field, hide field, show group, hide group, make required, make optional, enable field, disable field, variable updates, and ending actions.\par
+\pard\sa120\fs20 The builder uses plain-language labels such as When this happens and Then do this. The recall picker groups previous answers, variables, URL parameters, score, and price. Empty values are previewed as __ so the user can understand what will appear when no answer is available.\par
+\pard\sa120\fs20 Scoring rules associate fields with correct answers, points, negative points, and optional partial scoring. Calculations can operate on fields, variables, constants, and score values with add, subtract, multiply, and divide operations. Outcomes can display an outcome title and description, choose a thank-you screen, or redirect to a configured URL.\par
+\pard\sa180\fs22\b 7. Theme, branding, start page, and submission UI\b0\par
+\pard\sa120\fs20 Theme configuration is stored in the form theme and includes colors, typography, layout, spacing, border radius, background treatment, button styling, and other visual values. Branding is resolved by shared branding helpers and rendered through the reusable FormBrandingLogo component.\par
+\pard\sa120\fs20 Branding configuration supports logo source, alternative text, size, position, visibility on welcome/questions/ending screens, custom visibility modes, social media profiles, icon size, social position, and platform attribution. Public form pages now support header, footer, or both placement for social links. The start page can include title, description, button text, button visibility, attachment media, and branding.\par
+\pard\sa120\fs20 The submission page is theme-aware and includes a branded header, ending logo, optional thank-you attachment, success indicator, configurable thank-you title, redirect messaging, optional submit-another-response action, social footer, and optional Formyst attribution. Quiz results are shown instead when the configured quiz requires them.\par
+\pard\sa180\fs22\b 8. Settings system\b0\par
+\pard\sa120\fs20 Settings are available both through the inline builder settings panel and the modal settings interface. Sections include basic information, screens, limits, security, branding, notifications, quiz/scoring, design, API, webhooks, and metadata.\par
+\pard\sa120\fs20 useFormSettings builds a local editing shape from the canonical schema, merges defaults, updates nested settings, and calls the existing form saveDraft path through onSchemaUpdate. The formSettingsSchema is passthrough-enabled so newer or extended settings are not silently removed during validation.\par
+\pard\sa120\fs20 The settings UI contains some legacy loose typing and duplicated compatibility surfaces. The intended persistence path is schema draft saving rather than metadata-only form updates. Public behavior must read the same schema keys that the settings UI writes.\par
+\pard\sa180\fs22\b 9. Security and response enforcement\b0\par
+\pard\sa120\fs20 Public response endpoints are defined in packages/trpc/server/routes/response/route.ts and delegate to packages/services/response. The service resolves the published form version, validates incoming data against the form schema, writes response rows and answer snapshots, and supports drafts, response stages, completion, response retrieval, analytics, and webhooks.\par
+\pard\sa120\fs20 Current server-side enforcement includes:\par
+\pard\li360\sa60\fs20 Password protection is checked by the public renderer before access.\par
+\pard\li360\sa60\fs20 Duplicate prevention rejects a previously submitted response for the same session.\par
+\pard\li360\sa60\fs20 Response limits reject submissions after the configured maximum.\par
+\pard\li360\sa60\fs20 Rate limiting counts recent submitted responses within the configured window.\par
+\pard\li360\sa60\fs20 Profanity filtering scans text-like submitted values and applies configured custom and whitelist words.\par
+\pard\li360\sa60\fs20 Bot protection uses a hidden honeypot field in the form and validates it server-side.\par
+\pard\li360\sa60\fs20 Shared validation still enforces required fields, types, min/max rules, and patterns against the published schema.\par
+\pard\sa120\fs20 Security controls that rely on IP, device fingerprint, authenticated identity, CAPTCHA provider integration, or external bot scoring should be reviewed separately before production hardening. The response service currently has a session-oriented duplicate/rate model and should be extended if stronger identity or network-level guarantees are required.\par
+\pard\sa180\fs22\b 10. API and tRPC architecture\b0\par
+\pard\sa120\fs20 tRPC is the primary typed procedure layer. The main route groups are:\par
+\pard\li360\sa60\fs20\b form\b0 - get all forms, get by ID, public lookup, create, update, delete, publish, unpublish, duplicate, versions, save version, save draft, and restore version.\par
+\pard\li360\sa60\fs20\b response\b0 - save draft, submit, retrieve draft, list responses, start response, stage response, complete response, retrieve response, and webhook management.\par
+\pard\li360\sa60\fs20\b folder\b0 - folder tree and folder management operations.\par
+\pard\li360\sa60\fs20\b theme\b0 - theme-related operations.\par
+\pard\li360\sa60\fs20\b health\b0 - service health checks.\par
+\pard\sa120\fs20 Procedures are protected or public according to the operation. Form creation, editing, publishing, versioning, folder management, analytics, and webhooks are owner-controlled. Public form retrieval and response submission are intentionally unauthenticated, with schema and security enforcement applied at the service boundary.\par
+\pard\sa180\fs22\b 11. Database and domain services\b0\par
+\pard\sa120\fs20 PostgreSQL is accessed through Drizzle ORM. The database package owns connection management and schema exports. The API configures pool error handling and graceful shutdown. Form versions are stored so drafts, published versions, restores, and history can be represented independently.\par
+\pard\sa120\fs20 The folder service in packages/services/folder/index.ts provides the workspace organization model. It supports a hierarchical tree, ordered siblings, system folder creation, custom folders, renaming, moving, archiving, restoring, deletion behavior, form counts, ownership checks, unique name handling, and cycle prevention. Archived descendants are cascaded so they are not stranded under an inactive parent. The tagged folder service file is a central reference for ownership, tree integrity, conflict handling, and soft-delete behavior.\par
+\pard\sa180\fs22\b 12. Public form runtime\b0\par
+\pard\sa120\fs20 The single-step renderer is implemented under apps/web/components/forms/form-renderer/single-step. It initializes form data, loads and saves progress, resolves URL-hidden values, computes conditional visibility, records interaction events, validates visible/effective fields, submits response data, calculates quiz results, and transitions to the success state.\par
+\pard\sa120\fs20 The renderer supports classic one-page forms and classic multi-step forms based on groups. getNextStepIndex and resolveStepRouting are used to honor forward jumps and skipped groups. Field visibility and required overrides are applied before submission validation so a field hidden or made optional by logic does not incorrectly block the user.\par
+\pard\sa180\fs22\b 13. Authentication and access control\b0\par
+\pard\sa120\fs20 Better Auth is integrated as a shared package with database-backed sessions and optional passkey support. Server procedures use protectedProcedure and ownership checks before exposing or mutating private form data. Public procedures are reserved for published form access, draft response handling, response submission, and public response flows.\par
+\pard\sa180\fs22\b 14. Notifications, email, webhooks, and integrations\b0\par
+\pard\sa120\fs20 The repository includes a mail package with templates, notification settings in the form settings model, API configuration surfaces, and webhook registration/listing/deletion procedures. Response creation and completion provide the integration points for sending notifications and triggering webhooks. These areas should be verified against the deployed environment because configuration values, secrets, and provider credentials are environment-dependent.\par
+\pard\sa180\fs22\b 15. Mobile, embed, and alternate surfaces\b0\par
+\pard\sa120\fs20 The web application includes embed routes and Capacitor dependencies for Android and iOS packaging. There are also demo, copy, admin, dashboard-copy, form-copy, and embed-copy directories. These appear to be compatibility, experimental, or legacy surfaces and should be clearly separated from the canonical production paths to reduce maintenance ambiguity.\par
+\pard\sa180\fs22\b 16. Current strengths\b0\par
+\pard\li360\sa60\fs20 Shared schema and utilities reduce divergence between builder preview and public runtime.\par
+\pard\li360\sa60\fs20 Form versioning provides a foundation for draft and published workflows.\par
+\pard\li360\sa60\fs20 Logic, recall, routing, scoring, and theme behavior are represented as reusable data rather than hardcoded per screen.\par
+\pard\li360\sa60\fs20 Public submission validation is performed server-side against the published schema.\par
+\pard\li360\sa60\fs20 Folder ownership and tree integrity have explicit protections against cycles and conflicts.\par
+\pard\li360\sa60\fs20 The renderer includes progress saving, interaction tracking, error handling, and responsive branded presentation.\par
+\pard\sa180\fs22\b 17. Current risks and technical debt\b0\par
+\pard\li360\sa60\fs20 The web application contains duplicate or copied directories, including admincopy, dashboardcopy, form-builder-copy, forms-copy, embed-copy, and component copies. This can cause fixes to land in one surface but not another.\par
+\pard\li360\sa60\fs20 Settings components rely heavily on any and have existing lint noise. Stronger shared types would make configuration regressions easier to detect.\par
+\pard\li360\sa60\fs20 Some settings are legacy extensions passed through the schema. A formal versioned settings contract would be safer than broad passthrough behavior over time.\par
+\pard\li360\sa60\fs20 The public response endpoint needs stronger atomic enforcement for high-concurrency response caps and rate limits if strict quotas are business-critical. Database constraints or transactional counting may be required.\par
+\pard\li360\sa60\fs20 Bot protection is currently a honeypot-based control, not a complete CAPTCHA or behavioral detection service.\par
+\pard\li360\sa60\fs20 Browser-based password protection and some UX controls should be paired with an explicit server-side access gate if password secrecy is a hard requirement.\par
+\pard\li360\sa60\fs20 Existing lint/typecheck output includes unrelated legacy errors in copied or older surfaces. Targeted changed-file Problems checks are currently clean, and the response service typecheck passes.\par
+\pard\sa180\fs22\b 18. Recommended development roadmap\b0\par
+\pard\li360\sa60\fs20 1. Define one canonical production directory and mark copied surfaces as deprecated or remove them after migration.\par
+\pard\li360\sa60\fs20 2. Replace settings any types with shared Settings and feature-specific interfaces.\par
+\pard\li360\sa60\fs20 3. Add integration tests for every settings section: persistence, reload, public behavior, and publish behavior.\par
+\pard\li360\sa60\fs20 4. Add response-service tests for duplicate prevention, rate windows, response caps, profanity, honeypot, password access, and concurrency.\par
+\pard\li360\sa60\fs20 5. Add browser tests for start page, conditional logic, step jumps, branding visibility, social placement, submission page, redirect, and quiz outcomes.\par
+\pard\li360\sa60\fs20 6. Move security-sensitive controls to transaction-safe or database-backed enforcement where needed.\par
+\pard\li360\sa60\fs20 7. Document environment variables, database setup, auth setup, publishing, deployment, and webhook provider configuration.\par
+\pard\li360\sa60\fs20 8. Add structured observability for submission failures, blocked submissions, webhook failures, and publishing errors.\par
+\pard\li360\sa60\fs20 9. Add accessibility checks for keyboard navigation, focus visibility, screen-reader labels, error announcements, and color contrast.\par
+\pard\li360\sa60\fs20 10. Establish a visual regression baseline for builder preview and public form pages.\par
+\pard\sa180\fs22\b 19. Validation and project status at document creation\b0\par
+\pard\sa120\fs20 Prettier formatting has been applied to the recent settings, renderer, and response-service changes. Problems checks for the changed files report no TypeScript or compile errors. The packages/services typecheck command passes. The web lint command still reports existing legacy lint findings, primarily explicit any usage and related older settings patterns. The services test command currently reports that no test files are present for that package.\par
+\pard\sa180\fs22\b 20. Key reference files\b0\par
+\pard\li360\sa60\fs20 packages/shared/form/form-schema.ts - canonical schema and configuration contracts.\par
+\pard\li360\sa60\fs20 packages/shared/form/form-utils.ts - shared visibility, flow, routing, normalization, and form helpers.\par
+\pard\li360\sa60\fs20 packages/form-engine/src - reusable logic, recall, and runtime engine.\par
+\pard\li360\sa60\fs20 apps/web/components/form-builder/form-builder/form-builder.tsx - main builder controller.\par
+\pard\li360\sa60\fs20 apps/web/components/form-builder/form-settings-modal/hooks/useFormSettings.ts - settings state and persistence bridge.\par
+\pard\li360\sa60\fs20 apps/web/components/forms/form-renderer/single-step/components/single-step-form.tsx - public form shell.\par
+\pard\li360\sa60\fs20 apps/web/components/forms/form-renderer/single-step/components/single-step-success-screen.tsx - public submission screen.\par
+\pard\li360\sa60\fs20 packages/trpc/server/routes/form/route.ts - form procedures and draft/publish/version operations.\par
+\pard\li360\sa60\fs20 packages/trpc/server/routes/response/route.ts - public response and webhook procedures.\par
+\pard\li360\sa60\fs20 packages/services/response/index.ts - response persistence, validation, answer snapshots, and security enforcement.\par
+\pard\li360\sa60\fs20 packages/services/folder/index.ts - folder tree, ownership, ordering, archive, restore, and cycle protections.\par
+\pard\li360\sa60\fs20 apps/api/src/index.ts - API startup, logging, pool error handling, and graceful shutdown.\par
+\pard\sa240\qc\cf2\fs18 End of synopsis\cf0\par
+}

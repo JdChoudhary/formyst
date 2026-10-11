@@ -1,0 +1,27 @@
+{
+  "name": "trpc-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "dotenv run -- turbo build",
+    "dev": "dotenv -- turbo dev",
+    "db:generate": "dotenv run -- turbo db:generate",
+    "db:migrate": "dotenv run -- turbo db:migrate",
+    "db:push": "dotenv run -- turbo db:push",
+    "lint": "turbo run lint",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "check-types": "turbo run check-types"
+  },
+  "devDependencies": {
+    "prettier": "^3.7.4",
+    "turbo": "^2.10.5",
+    "typescript": "^7.0.2"
+  },
+  "packageManager": "pnpm@12.10.1",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "dotenv-cli": "^11.0.0",
+    "vitest": "^5.0.3"
+  }
+}

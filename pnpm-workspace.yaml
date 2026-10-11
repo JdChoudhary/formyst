@@ -1,0 +1,12 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Which dependencies may run their install/postinstall build scripts.
+# These must be real booleans — placeholder text makes `pnpm install`
+# abort with ERR_PNPM_IGNORED_BUILDS.
+allowBuilds:
+  "@swc/core": true
+  esbuild: true
+  sharp: true
+  unrs-resolver: true

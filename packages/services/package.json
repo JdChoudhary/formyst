@@ -1,0 +1,25 @@
+{
+  "name": "@repo/services",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "dotenv-cli": "^11.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  },
+  "dependencies": {
+    "@repo/database": "workspace:*",
+    "@repo/logger": "workspace:*",
+    "@repo/mail": "workspace:*",
+    "@repo/shared": "workspace:*",
+    "drizzle-orm": "^0.45.1",
+    "openai": "^7.32.0",
+    "zod": "^4.3.5"
+  }
+}

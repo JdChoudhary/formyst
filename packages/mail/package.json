@@ -1,0 +1,28 @@
+{
+  "name": "@repo/mail",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "dev": "tsx src/index.ts",
+    "preview": "email dev --port 3080"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/nodemailer": "^8.0.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@react-email/ui": "^6.9.2",
+    "nodemailer": "^7.0.5",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-email": "^6.9.2",
+    "zod": "^4.3.5"
+  }
+}

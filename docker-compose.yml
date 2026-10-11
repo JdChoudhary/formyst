@@ -1,0 +1,31 @@
+services:
+  postgresdb:
+    image: postgres:15
+    restart: unless-stopped
+    container_name: formystz_postgresdb
+
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  # redis:
+  #   image: redis:7-alpine
+  #   restart: unless-stopped
+  #   container_name: formystz_redis
+
+  #   ports:
+  #     - "6379:6379"
+
+  #   volumes:
+  #     - redis_data:/data
+
+volumes:
+  pg_data:
+  # redis_data:

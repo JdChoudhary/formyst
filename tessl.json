@@ -1,0 +1,22 @@
+{
+  "name": "formik",
+  "mode": "vendored",
+  "dependencies": {
+    "better-auth/skills": {
+      "version": "17dfe3a1da1c3982de723098ba1015d67f35694c",
+      "source": "https://github.com/better-auth/skills",
+      "include": {
+        "skills": [
+          "organization-best-practices"
+        ]
+      }
+    }
+  },
+  "agents": [
+    "claude-code",
+    "cursor",
+    "gemini",
+    "copilot",
+    "copilot-vscode"
+  ]
+}
