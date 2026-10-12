@@ -95,9 +95,12 @@ export default async function AdminPage() {
             Signed in as {session.user.email}
           </p>
         </div>
-        <Button asChild size="sm" variant="outline">
-          <Link href="/admin/ai-builder">Open AI builder</Link>
-        </Button>
+        <Button
+          nativeButton={false}
+          render={<Link href="/admin/ai-builder">Open AI builder</Link>}
+          size="sm"
+          variant="outline"
+        />
       </header>
 
       <section

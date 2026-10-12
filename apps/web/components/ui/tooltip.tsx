@@ -1,61 +1,27 @@
 "use client"
 
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip"
-
-import { cn } from "@/lib/utils"
-import { Slot } from "@/components/ui/slot"
+import { cn } from "cn"
 
 function TooltipProvider({
   delay = 0,
-  delayDuration,
   ...props
-}: TooltipPrimitive.Provider.Props & {
-  /** Radix-style alias for `delay` (ms before the tooltip opens). */
-  delayDuration?: number
-}) {
+}: TooltipPrimitive.Provider.Props) {
   return (
     <TooltipPrimitive.Provider
       data-slot="tooltip-provider"
-      delay={delayDuration ?? delay}
+      delay={delay}
       {...props}
     />
   )
 }
 
-function Tooltip({
-  delayDuration,
-  ...props
-}: TooltipPrimitive.Root.Props & {
-  /** Radix-style prop — maps to Base UI's provider-level `delay`. */
-  delayDuration?: number
-}) {
-  if (delayDuration !== undefined) {
-    return (
-      <TooltipPrimitive.Provider delay={delayDuration}>
-        <TooltipPrimitive.Root data-slot="tooltip" {...props} />
-      </TooltipPrimitive.Provider>
-    )
-  }
+function Tooltip({ ...props }: TooltipPrimitive.Root.Props) {
   return <TooltipPrimitive.Root data-slot="tooltip" {...props} />
 }
 
-function TooltipTrigger({
-  asChild = false,
-  children,
-  ...props
-}: TooltipPrimitive.Trigger.Props & {
-  asChild?: boolean
-}) {
-  if (asChild) {
-    return (
-      <Slot {...props}>{children}</Slot>
-    )
-  }
-  return (
-    <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props}>
-      {children}
-    </TooltipPrimitive.Trigger>
-  )
+function TooltipTrigger({ ...props }: TooltipPrimitive.Trigger.Props) {
+  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
 }
 
 function TooltipContent({

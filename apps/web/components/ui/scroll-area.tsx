@@ -2,18 +2,13 @@
 
 import * as React from "react"
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area"
-
-import { cn } from "@/lib/utils"
+import { cn } from "cn"
 
 function ScrollArea({
   className,
   children,
-  type: _type,
   ...props
-}: ScrollAreaPrimitive.Root.Props & {
-  /** Radix-compat prop; ignored by Base UI. */
-  type?: string
-}) {
+}: ScrollAreaPrimitive.Root.Props) {
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"

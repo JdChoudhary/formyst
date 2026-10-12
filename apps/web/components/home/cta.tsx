@@ -28,45 +28,60 @@ function PrimaryActions({ user }: { user: unknown }) {
 	return (
 		<div className="flex w-fit flex-wrap items-center justify-center gap-3">
 			{user ? (
-				<Button asChild className="rounded-full" variant="default">
-					<Link
-						className="flex h-11 w-full items-center gap-2 font-medium md:w-44"
-						href="/dashboard"
-					>
-						Go to Dashboard{" "}
-						<svg
-							aria-hidden="true"
-							height="1em"
-							viewBox="0 0 24 24"
-							width="1em"
-							xmlns="http://www.w3.org/2000/svg"
+				<Button
+					className="rounded-full"
+					nativeButton={false}
+					render={
+						<Link
+							className="flex h-11 w-full items-center gap-2 font-medium md:w-44"
+							href="/dashboard"
 						>
-							<path
-								d="M9.29 6.71a.996.996 0 0 0 0 1.41L13.17 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.7 6.7c-.38-.38-1.02-.38-1.41.01"
-								fill="currentColor"
-							/>
-						</svg>
-					</Link>
-				</Button>
+							Go to Dashboard{" "}
+							<svg
+								aria-hidden="true"
+								height="1em"
+								viewBox="0 0 24 24"
+								width="1em"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									d="M9.29 6.71a.996.996 0 0 0 0 1.41L13.17 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.7 6.7c-.38-.38-1.02-.38-1.41.01"
+									fill="currentColor"
+								/>
+							</svg>
+						</Link>
+					}
+					variant="default"
+				/>
 			) : (
-				<Button asChild className="rounded-full" variant="default">
-					<Link
-						className="flex h-11 w-full items-center gap-2 font-medium md:w-62"
-						href="/login"
-					>
-						<span>Create Your First Form</span>{" "}
-						<ChevronRight aria-hidden="true" />
-					</Link>
-				</Button>
+				<Button
+					className="rounded-full"
+					nativeButton={false}
+					render={
+						<Link
+							className="flex h-11 w-full items-center gap-2 font-medium md:w-62"
+							href="/login"
+						>
+							<span>Create Your First Form</span>{" "}
+							<ChevronRight aria-hidden="true" />
+						</Link>
+					}
+					variant="default"
+				/>
 			)}
-			<Button asChild className="rounded-full" variant="outline">
-				<Link
-					className="flex h-11 w-full items-center gap-2 font-medium md:w-32"
-					href="/#form-builder-demo"
-				>
-					<span>Try a Demo</span>
-				</Link>
-			</Button>
+			<Button
+				className="rounded-full"
+				nativeButton={false}
+				render={
+					<Link
+						className="flex h-11 w-full items-center gap-2 font-medium md:w-32"
+						href="/#form-builder-demo"
+					>
+						<span>Try a Demo</span>
+					</Link>
+				}
+				variant="outline"
+			/>
 		</div>
 	);
 }

@@ -2,29 +2,14 @@
 
 import * as React from "react"
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover"
-
-import { cn } from "@/lib/utils"
-import { Slot } from "@/components/ui/slot"
+import { cn } from "cn"
 
 function Popover({ ...props }: PopoverPrimitive.Root.Props) {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
-function PopoverTrigger({
-  asChild = false,
-  children,
-  ...props
-}: PopoverPrimitive.Trigger.Props & {
-  asChild?: boolean
-}) {
-  if (asChild) {
-    return <Slot {...props}>{children}</Slot>
-  }
-  return (
-    <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props}>
-      {children}
-    </PopoverPrimitive.Trigger>
-  )
+function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props) {
+  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
 function PopoverContent({

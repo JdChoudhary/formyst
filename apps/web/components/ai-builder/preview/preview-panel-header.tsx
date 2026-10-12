@@ -32,11 +32,16 @@ export function PreviewPanelHeader({
 		return (
 			<>
 				<div className="flex items-center gap-3 border-b bg-card/50 p-4 backdrop-blur md:hidden">
-					<Button asChild size="icon" variant="ghost">
-						<Link href="/form-builder">
-							<ArrowLeft className="size-4" />
-						</Link>
-					</Button>
+					<Button
+						nativeButton={false}
+						render={
+							<Link href="/form-builder">
+								<ArrowLeft className="size-4" />
+							</Link>
+						}
+						size="icon"
+						variant="ghost"
+					/>
 					<div className="inline-flex items-center gap-2">
 						<span className="size-2 rounded-2xl bg-muted-foreground" />
 						<span className="font-semibold text-lg">Kiko AI</span>

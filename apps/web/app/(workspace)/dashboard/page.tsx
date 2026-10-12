@@ -318,11 +318,11 @@ export default function DashboardPage() {
                 <span className="text-xs">{statusFilter === "all" ? "All status" : statusFilter}</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
                 <DropdownMenuRadioGroup
                   value={statusFilter}
                   onValueChange={(v) => setStatusFilter(v as typeof statusFilter)}
                 >
+                  <DropdownMenuLabel>Filter by status</DropdownMenuLabel>
                   <DropdownMenuRadioItem value="all">All</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="published">Published</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="draft">Draft</DropdownMenuRadioItem>
@@ -340,11 +340,11 @@ export default function DashboardPage() {
                 <span className="text-xs">Sort</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-40">
-                <DropdownMenuLabel>Sort by</DropdownMenuLabel>
                 <DropdownMenuRadioGroup
                   value={sortBy}
                   onValueChange={(v) => setSortBy(v as typeof sortBy)}
                 >
+                  <DropdownMenuLabel>Sort by</DropdownMenuLabel>
                   <DropdownMenuRadioItem value="updated">Recently updated</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="created">Recently created</DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="title">Name</DropdownMenuRadioItem>

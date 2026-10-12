@@ -20,6 +20,7 @@ import {
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
@@ -110,37 +111,41 @@ const UserDropdownMenu = React.memo(function UserDropdownMenu({
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<Button
-					aria-expanded={false}
-					aria-label="Open user menu"
-					className="inline-flex items-center gap-2 rounded-full focus-visible:ring-[3px] focus-visible:ring-ring/50"
-					size="icon"
-					variant="outline"
-				>
-					<UserAvatar user={user} />
-				</Button>
-			</DropdownMenuTrigger>
+			<DropdownMenuTrigger
+				render={
+					<Button
+						aria-expanded={false}
+						aria-label="Open user menu"
+						className="inline-flex items-center gap-2 rounded-full focus-visible:ring-[3px] focus-visible:ring-ring/50"
+						size="icon"
+						variant="outline"
+					>
+						<UserAvatar user={user} />
+					</Button>
+				}
+			/>
 			<DropdownMenuContent
 				align="end"
 				className="w-64 rounded-lg p-2 shadow-xs"
 				sideOffset={8}
 			>
-				<DropdownMenuLabel className="flex items-start gap-3 px-2 py-2">
-					<Avatar className="size-9">
-						<AvatarImage
-							alt={name}
-							src={user.user_metadata?.avatar_url ?? undefined}
-						/>
-						<AvatarFallback>
-							{(name ?? "U").slice(0, 2).toUpperCase()}
-						</AvatarFallback>
-					</Avatar>
-					<div className="flex min-w-0 flex-col gap-0.5">
-						<span className="truncate font-medium">{name}</span>
-						<span className="truncate text-xs opacity-70">{email}</span>
-					</div>
-				</DropdownMenuLabel>
+				<DropdownMenuGroup>
+					<DropdownMenuLabel className="flex items-start gap-3 px-2 py-2">
+						<Avatar className="size-9">
+							<AvatarImage
+								alt={name}
+								src={user.user_metadata?.avatar_url ?? undefined}
+							/>
+							<AvatarFallback>
+								{(name ?? "U").slice(0, 2).toUpperCase()}
+							</AvatarFallback>
+						</Avatar>
+						<div className="flex min-w-0 flex-col gap-0.5">
+							<span className="truncate font-medium">{name}</span>
+							<span className="truncate text-xs opacity-70">{email}</span>
+						</div>
+					</DropdownMenuLabel>
+				</DropdownMenuGroup>
 				<DropdownMenuSeparator />
 				<div className="flex flex-col gap-0.5 py-1">
 					<DropdownMenuItem
@@ -211,22 +216,32 @@ const DesktopActions = React.memo(function DesktopActions({
 		<div className="hidden items-center gap-2 md:flex">
 			{user ? (
 				<div className="flex items-center gap-2">
-					<Button asChild className="rounded-md" variant="outline">
-						<Link
-							className="flex min-h-[36px] items-center gap-1"
-							href="/dashboard"
-						>
-							Dashboard
-						</Link>
-					</Button>
+					<Button
+						className="rounded-md"
+						nativeButton={false}
+						render={
+							<Link
+								className="flex min-h-[36px] items-center gap-1"
+								href="/dashboard"
+							>
+								Dashboard
+							</Link>
+						}
+						variant="outline"
+					/>
 					<UserDropdownMenu signOut={signOut} user={user} />
 				</div>
 			) : (
-				<Button asChild className="rounded-md" variant="outline">
-					<Link className="flex min-h-[36px] items-center gap-1" href="/login">
-						Login
-					</Link>
-				</Button>
+				<Button
+					className="rounded-md"
+					nativeButton={false}
+					render={
+						<Link className="flex min-h-[36px] items-center gap-1" href="/login">
+							Login
+						</Link>
+					}
+					variant="outline"
+				/>
 			)}
 		</div>
 	);
@@ -348,18 +363,20 @@ const MobileDrawer = React.memo(function MobileDrawer({
 	return (
 		<div className="flex items-center md:hidden">
 			<Drawer>
-				<DrawerTrigger asChild>
-					<Button
-						aria-expanded={false}
-						aria-label="Open navigation menu"
-						className="min-h-[44px] min-w-[44px] touch-manipulation"
-						size="icon"
-						variant="ghost"
-					>
-						<span className="sr-only">Open menu</span>
-						<AlignJustify aria-hidden="true" className="size-6" />
-					</Button>
-				</DrawerTrigger>
+				<DrawerTrigger
+					render={
+						<Button
+							aria-expanded={false}
+							aria-label="Open navigation menu"
+							className="min-h-[44px] min-w-[44px] touch-manipulation"
+							size="icon"
+							variant="ghost"
+						>
+							<span className="sr-only">Open menu</span>
+							<AlignJustify aria-hidden="true" className="size-6" />
+						</Button>
+					}
+				/>
 				<DrawerContent className="flex flex-col gap-6 overscroll-contain p-6 pt-0 pb-10">
 					<DrawerTitle className="sr-only">Navigation Menu</DrawerTitle>
 					<DrawerDescription className="sr-only">
@@ -372,18 +389,16 @@ const MobileDrawer = React.memo(function MobileDrawer({
 								<MobileDrawerButtonSkeleton />
 							) : user ? (
 								<Button
-									asChild
 									className="min-h-[44px] w-full touch-manipulation rounded-lg font-medium text-base"
-								>
-									<Link href="/dashboard">Dashboard</Link>
-								</Button>
+									nativeButton={false}
+									render={<Link href="/dashboard">Dashboard</Link>}
+								/>
 							) : (
 								<Button
-									asChild
 									className="min-h-[44px] w-full touch-manipulation rounded-lg font-medium text-base"
-								>
-									<Link href="/login">Login</Link>
-								</Button>
+									nativeButton={false}
+									render={<Link href="/login">Login</Link>}
+								/>
 							)}
 						</div>
 						<Separator />

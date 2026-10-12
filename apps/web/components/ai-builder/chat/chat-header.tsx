@@ -34,14 +34,15 @@ export function ChatHeader({
         <div className="flex items-center gap-3">
           <Button
             aria-label="Back to form builder"
-            asChild
+            nativeButton={false}
+            render={
+              <Link href="/form-builder">
+                <ArrowLeft aria-hidden className="size-4" />
+              </Link>
+            }
             size="icon"
             variant="outline"
-          >
-            <Link href="/form-builder">
-              <ArrowLeft aria-hidden className="size-4" />
-            </Link>
-          </Button>
+          />
           <h1 className="font-semibold text-lg">Kiko AI</h1>
         </div>
         <SessionHistoryMenu

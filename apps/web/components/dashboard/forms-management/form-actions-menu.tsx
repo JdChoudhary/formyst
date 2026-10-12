@@ -139,12 +139,14 @@ export function FormActionsMenu({
             <DropdownMenuGroup>
               <DropdownMenuLabel>{form.title}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href={`/form-builder/${form.id}`}>
-                  <Pencil className="size-4 shrink-0" />
-                  <span>Edit form</span>
-                </Link>
-              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={
+                  <Link href={`/form-builder/${form.id}`}>
+                    <Pencil className="size-4 shrink-0" />
+                    <span>Edit form</span>
+                  </Link>
+                }
+              />
               <DropdownMenuItem onClick={() => setShareOpen(true)}>
                 <Share2 className="size-4 shrink-0" />
                 <span>Share form</span>
@@ -160,31 +162,39 @@ export function FormActionsMenu({
                 )}
                 <span>Duplicate</span>
               </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={`/f/${form.slug}`}>
-                  <ExternalLink className="size-4 shrink-0" />
-                  <span>View form</span>
-                </Link>
-              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={
+                  <Link href={`/f/${form.slug}`}>
+                    <ExternalLink className="size-4 shrink-0" />
+                    <span>View form</span>
+                  </Link>
+                }
+              />
               <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link href={`/dashboard/forms/${form.id}/analytics`}>
-                  <BarChart3 className="size-4 shrink-0" />
-                  <span>View analytics</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={`/dashboard/forms/${form.id}/submissions`}>
-                  <ListChecks className="size-4 shrink-0" />
-                  <span>View submissions</span>
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href={`/embed?formid=${form.id}`}>
-                  <Code2 className="size-4 shrink-0" />
-                  <span>Embed</span>
-                </Link>
-              </DropdownMenuItem>
+              <DropdownMenuItem
+                render={
+                  <Link href={`/dashboard/forms/${form.id}/analytics`}>
+                    <BarChart3 className="size-4 shrink-0" />
+                    <span>View analytics</span>
+                  </Link>
+                }
+              />
+              <DropdownMenuItem
+                render={
+                  <Link href={`/dashboard/forms/${form.id}/submissions`}>
+                    <ListChecks className="size-4 shrink-0" />
+                    <span>View submissions</span>
+                  </Link>
+                }
+              />
+              <DropdownMenuItem
+                render={
+                  <Link href={`/embed?formid=${form.id}`}>
+                    <Code2 className="size-4 shrink-0" />
+                    <span>Embed</span>
+                  </Link>
+                }
+              />
               <DropdownMenuSeparator />
               <DropdownMenuItem disabled={exporting !== null || exportFetching} onClick={() => handleExport("csv")}>
                 {exporting === "csv" ? (

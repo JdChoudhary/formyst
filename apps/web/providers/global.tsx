@@ -8,7 +8,7 @@ import { Toaster } from "~/components/ui/sonner";
 import { TooltipProvider } from "~/components/ui/tooltip";
 import { trpc } from "~/trpc/client";
 import { createTRPCHttpBatchClientClient } from "~/trpc/create-client";
-import { useCapacitorBootstrap } from "~/hooks/use-capacitor-bootstrap";
+// import { useCapacitorBootstrap } from "~/hooks/use-capacitor-bootstrap";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
 });
 
 export const GlobalProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  useCapacitorBootstrap();
+  // useCapacitorBootstrap();
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [createTRPCHttpBatchClientClient()],

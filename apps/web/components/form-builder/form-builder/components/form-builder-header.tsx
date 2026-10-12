@@ -85,15 +85,20 @@ export const FormBuilderHeader: React.FC<FormBuilderHeaderProps> = ({
           <Tooltip>
             <TooltipTrigger
               render={
-                <Button aria-label="Back to dashboard" asChild size="icon-xs" variant="ghost">
-                  <Link href="/dashboard">
-                    <ArrowLeft className="size-4" />
-                  </Link>
-                </Button>
+                <Button
+                  aria-label="Back to dashboard"
+                  nativeButton={false}
+                  render={
+                    <Link href="/dashboard">
+                      <ArrowLeft className="size-4" />
+                    </Link>
+                  }
+                  size="icon-xs"
+                  variant="ghost"
+                />
               }
-            >
-              <TooltipContent side="bottom">Dashboard</TooltipContent>
-            </TooltipTrigger>
+            />
+            <TooltipContent side="bottom">Dashboard</TooltipContent>
           </Tooltip>
 
           <Separator className="hidden h-5 md:block" orientation="vertical" />

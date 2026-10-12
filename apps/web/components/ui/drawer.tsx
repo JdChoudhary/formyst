@@ -2,9 +2,7 @@
 
 import * as React from "react"
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer"
-
-import { cn } from "@/lib/utils"
-import { Slot } from "@/components/ui/slot"
+import { cn } from "cn"
 
 type DrawerContextProps = {
   hasSnapPoints: boolean
@@ -53,21 +51,8 @@ function Drawer({
   )
 }
 
-function DrawerTrigger({
-  asChild = false,
-  children,
-  ...props
-}: DrawerPrimitive.Trigger.Props & {
-  asChild?: boolean
-}) {
-  if (asChild) {
-    return <Slot {...props}>{children}</Slot>
-  }
-  return (
-    <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props}>
-      {children}
-    </DrawerPrimitive.Trigger>
-  )
+function DrawerTrigger({ ...props }: DrawerPrimitive.Trigger.Props) {
+  return <DrawerPrimitive.Trigger data-slot="drawer-trigger" {...props} />
 }
 
 function DrawerPortal({ ...props }: DrawerPrimitive.Portal.Props) {

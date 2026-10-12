@@ -284,30 +284,32 @@ function HeroCTAs() {
 			className="flex w-fit flex-wrap items-center justify-center gap-3"
 		>
 			<Button
-				asChild
 				className="min-h-[44px] rounded-full md:min-h-[44px]"
+				nativeButton={false}
+				render={
+					<Link
+						className="flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap font-medium md:w-auto md:min-w-[240px]"
+						href="/login"
+					>
+						<span>Create Your First Form</span>
+						<ChevronRight aria-hidden="true" className="size-4" />
+					</Link>
+				}
 				variant="default"
-			>
-				<Link
-					className="flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap font-medium md:w-auto md:min-w-[240px]"
-					href="/login"
-				>
-					<span>Create Your First Form</span>
-					<ChevronRight aria-hidden="true" className="size-4" />
-				</Link>
-			</Button>
+			/>
 			<Button
-				asChild
 				className="min-h-[44px] rounded-full md:min-h-[44px]"
+				nativeButton={false}
+				render={
+					<Link
+						className="flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap font-medium md:w-auto md:min-w-[160px]"
+						href="/#form-builder-demo"
+					>
+						<span>Try a Demo</span>
+					</Link>
+				}
 				variant="outline"
-			>
-				<Link
-					className="flex h-11 w-full items-center justify-center gap-2 whitespace-nowrap font-medium md:w-auto md:min-w-[160px]"
-					href="/#form-builder-demo"
-				>
-					<span>Try a Demo</span>
-				</Link>
-			</Button>
+			/>
 		</div>
 	);
 }
