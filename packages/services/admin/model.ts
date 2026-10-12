@@ -80,7 +80,6 @@ export interface AdminFormSummary {
  */
 export interface AdminFormDetail extends AdminFormSummary {
   userId: string;
-  folderId: string | null;
   apiEnabled: boolean;
   revision: number;
   owner: { id: string; name: string; email: string } | null;

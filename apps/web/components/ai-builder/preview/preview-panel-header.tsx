@@ -13,6 +13,8 @@ interface PreviewPanelHeaderProps {
 	setShowJsonModal: (show: boolean) => void;
 	onUseForm: () => void;
 	isMobile?: boolean;
+	/** True while the form is being written back to the builder. */
+	isUsingForm?: boolean;
 }
 
 export function PreviewPanelHeader({
@@ -23,6 +25,7 @@ export function PreviewPanelHeader({
 	setShowJsonModal,
 	onUseForm,
 	isMobile = false,
+	isUsingForm = false,
 }: PreviewPanelHeaderProps) {
 	if (!forms || forms.length === 0) {
 		return null;
@@ -65,10 +68,11 @@ export function PreviewPanelHeader({
 					<div className="hidden px-3 pb-3 max-sm:flex">
 						<Button
 							className="w-full rounded-2xl py-3 font-semibold text-base"
+							disabled={isUsingForm}
 							onClick={onUseForm}
 							size="lg"
 						>
-							Use this form
+							{isUsingForm ? "Loading…" : "Use this form"}
 						</Button>
 					</div>
 				)}
@@ -98,8 +102,8 @@ export function PreviewPanelHeader({
 					>
 						View JSON
 					</Button>
-					<Button onClick={onUseForm} size="sm">
-						Use this form
+					<Button disabled={isUsingForm} onClick={onUseForm} size="sm">
+						{isUsingForm ? "Loading…" : "Use this form"}
 					</Button>
 				</div>
 			)}

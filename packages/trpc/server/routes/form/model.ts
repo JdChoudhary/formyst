@@ -4,7 +4,6 @@ import { formSchema } from "@repo/shared";
 export const formOutputSchema = z.object({
   id: z.string(),
   userId: z.string(),
-  folderId: z.string().nullable(),
   createdBy: z.string().nullable(),
   title: z.string(),
   description: z.string().nullable(),
@@ -46,7 +45,6 @@ export const createFormInputSchema = z.object({
   title: z.string().min(1).max(255),
   publicTitle: z.string().max(255).optional(),
   description: z.string().max(2000).optional(),
-  folderId: z.string().uuid().nullable().optional(),
   schema: formSchema.optional(),
   themeId: z.string().uuid().nullable().optional(),
   themeUrl: z.string().url().nullable().optional(),
@@ -56,7 +54,6 @@ export const updateFormInputSchema = z.object({
   id: z.string(),
   title: z.string().min(1).max(255).optional(),
   description: z.string().max(2000).nullable().optional(),
-  folderId: z.string().uuid().nullable().optional(),
   themeId: z.string().uuid().nullable().optional(),
   themeUrl: z.string().url().nullable().optional(),
 });
@@ -70,7 +67,6 @@ export const getFormBySlugInputSchema = z.object({
 });
 
 export const listFormsInputSchema = z.object({
-  folderId: z.string().uuid().nullable().optional(),
   search: z.string().max(200).optional(),
   publishedOnly: z.boolean().optional(),
 });

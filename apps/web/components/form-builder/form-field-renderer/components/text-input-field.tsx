@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import type { FormField } from "@/lib";
 import { safeRegexTest } from "@/lib/utils/safe-regex";
 import type { BaseFieldProps } from "../types";
-import { applyBuilderMode, getBaseClasses, getBuilderMode } from "../utils";
+import { applyBuilderMode, getAnswerInputClasses, getBuilderMode } from "../utils";
 
 export function getLivePatternError(field: FormField, value: string) {
 	const pattern = field.properties?.regexp;
@@ -17,14 +17,14 @@ export function getLivePatternError(field: FormField, value: string) {
 
 export function TextInputField(props: BaseFieldProps) {
 	const { field, value, onChange, error, fieldRef, disabled } = props;
-	const baseClasses = getBaseClasses(field, error);
+	const baseClasses = getAnswerInputClasses(error);
 	const livePatternError = getLivePatternError(field, value);
 	const builderMode = getBuilderMode(props);
 	const fieldId = field.ref ?? "field";
 
 	const inputProps = applyBuilderMode(
 		{
-			className: cn(baseClasses, "h-12 rounded-xl px-4 text-base"),
+			className: cn(baseClasses, "h-12 text-lg"),
 			disabled,
 			id: fieldId,
 			name: fieldId,

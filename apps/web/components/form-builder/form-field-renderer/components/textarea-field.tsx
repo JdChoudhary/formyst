@@ -5,11 +5,11 @@ import { cn } from "@/lib/utils";
 
 import type { BaseFieldProps } from "../types";
 
-import { applyBuilderMode, getBaseClasses, getBuilderMode } from "../utils";
+import { applyBuilderMode, getAnswerInputClasses, getBuilderMode } from "../utils";
 
 export function TextareaField(props: BaseFieldProps) {
 	const { field, value, onChange, error, fieldRef, disabled } = props;
-	const baseClasses = getBaseClasses(field, error);
+	const baseClasses = getAnswerInputClasses(error);
 	const builderMode = getBuilderMode(props);
 
 	const handleValueChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -28,7 +28,7 @@ export function TextareaField(props: BaseFieldProps) {
 
 	const textareaProps = applyBuilderMode(
 		{
-			className: cn(baseClasses, "rounded-xl px-4 py-3 text-base"),
+			className: cn(baseClasses, "py-3 text-base"),
 			disabled,
 			id: field.ref,
 			name: field.ref,

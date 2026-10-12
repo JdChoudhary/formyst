@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 
 import { FormBuilderSkeleton } from "@/components/form-builder/form-builder-skeleton";
@@ -14,12 +15,21 @@ const FormBuilderClient = dynamic(
   },
 );
 
-export default function NewFormBuilderPage() {
-  const [open, setOpen] = useState(true);
+/**
+ * The "create a new form" dialog. It is skipped when the builder was opened
+ * with a generated/imported schema (e.g. "Use this form" in the AI builder), so
+ * that form loads straight onto the canvas as an unsaved draft.
+ */
+function NewFormDialogGate() {
+  const searchParams = useSearchParams();
+  const [open, setOpen] = useState(searchParams.get("from") !== "ai-builder");
+  return <NewFormDialog open={open} onOpenChange={setOpen} />;
+}
 
+export default function NewFormBuilderPage() {
   return (
     <Suspense fallback={<FormBuilderSkeleton />}>
-      <NewFormDialog open={open} onOpenChange={setOpen} />
+      <NewFormDialogGate />
       <FormBuilderClient />
     </Suspense>
   );

@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { toast } from "@/hooks/use-toast";
 
 import type { FormSchema } from "@repo/shared";
-import { normalizeFormSchema } from "@repo/shared";
+import { normalizeFormSchemaSafe } from "@repo/shared";
 
 import { useGetForm, useUpdateForm } from "@/hooks/api/form";
 import { createDefaultFormSchema, ensureDefaultRateLimitSettings } from "@/lib/forms";
@@ -120,53 +120,27 @@ export const useFormBuilder = (formId?: string) => {
 
   useEffect(() => {
     const imported = localStorage.getItem(DRAFT_KEYS.IMPORTED_FORM_SCHEMA);
-    if (imported) {
-      try {
-        const schema = JSON.parse(imported);
-        const normalizedSchema = {
-          fields: Array.isArray(schema.fields) ? schema.fields : [],
-          settings:
-            typeof schema.settings === "object" && schema.settings
-              ? {
-                  title: schema.settings.title || FORM_BUILDER_CONSTANTS.DEFAULT_FORM_TITLE,
-                  description:
-                    schema.settings.description || FORM_BUILDER_CONSTANTS.DEFAULT_FORM_DESCRIPTION,
-                  submitText:
-                    schema.settings.submitText || FORM_BUILDER_CONSTANTS.DEFAULT_SUBMIT_TEXT,
-                  successMessage:
-                    schema.settings.successMessage ||
-                    FORM_BUILDER_CONSTANTS.DEFAULT_SUCCESS_MESSAGE,
-                  redirectUrl:
-                    schema.settings.redirectUrl || FORM_BUILDER_CONSTANTS.DEFAULT_REDIRECT_URL,
-                  showProgress:
-                    "showProgress" in schema.settings ? !!schema.settings.showProgress : true,
-                  ...schema.settings,
-                }
-              : {
-                  title: FORM_BUILDER_CONSTANTS.DEFAULT_FORM_TITLE,
-                  description: FORM_BUILDER_CONSTANTS.DEFAULT_FORM_DESCRIPTION,
-                  submitText: FORM_BUILDER_CONSTANTS.DEFAULT_SUBMIT_TEXT,
-                  successMessage: FORM_BUILDER_CONSTANTS.DEFAULT_SUCCESS_MESSAGE,
-                  redirectUrl: FORM_BUILDER_CONSTANTS.DEFAULT_REDIRECT_URL,
-                  showProgress: true,
-                },
-        };
+    if (!imported) return;
+    localStorage.removeItem(DRAFT_KEYS.IMPORTED_FORM_SCHEMA);
 
-        try {
-          actions.setFormSchema(
-            ensureFieldRefs(ensureDefaultRateLimitSettings(normalizeFormSchema(normalizedSchema))),
-          );
-        } catch {
-          // Malformed imported schema — fall back to a fresh form.
-          actions.setFormSchema(
-            createDefaultFormSchema({
-              title: schema.settings?.title || FORM_BUILDER_CONSTANTS.DEFAULT_FORM_TITLE,
+    try {
+      const parsed: unknown = JSON.parse(imported);
+      // Importing a form ("Use this form" in the AI builder, a JSON paste, …)
+      // must keep the *complete* schema — logic, scoring, outcomes, screens,
+      // theme and groups included — not just its fields and settings.
+      const normalized = normalizeFormSchemaSafe(parsed);
+      actions.setFormSchema(
+        normalized
+          ? ensureFieldRefs(ensureDefaultRateLimitSettings(normalized))
+          : createDefaultFormSchema({
+              title:
+                (parsed as { title?: string } | null)?.title ||
+                FORM_BUILDER_CONSTANTS.DEFAULT_FORM_TITLE,
             }),
-          );
-        }
-        actions.setHasUnsavedChanges(true);
-      } catch {}
-      localStorage.removeItem(DRAFT_KEYS.IMPORTED_FORM_SCHEMA);
+      );
+      actions.setHasUnsavedChanges(true);
+    } catch {
+      // Unreadable import — leave the fresh default form in place.
     }
   }, []);
 

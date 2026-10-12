@@ -1,28 +1,19 @@
 import { GripVertical } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { BaseFieldProps } from "../types";
-
-interface RankOption {
-  id: string;
-  label: string;
-  value?: string;
-}
+import { getRankedOrder, getRankOptions, moveRanked } from "../utils/ranking";
 
 export function RankingField({ field, value, onChange, disabled, fieldRef }: BaseFieldProps) {
-  const options = (((field as any).options ?? []) as RankOption[]).filter((option) => option?.id);
-  const ranked: string[] = Array.isArray(value) ? value : [];
+  const options = getRankOptions(field.properties?.choices);
+  const ordered = getRankedOrder(options, value);
 
   const move = (id: string, direction: -1 | 1) => {
-    const index = ranked.indexOf(id);
-    if (index === -1) return;
-    const target = index + direction;
-    if (target < 0 || target >= ranked.length) return;
-    const next = [...ranked];
-    [next[index], next[target]] = [next[target], next[index]];
+    const next = moveRanked(ordered, id, direction);
+    if (!next) return;
+    // Commit the whole order: a previously untouched field then starts from the
+    // layout shown on screen instead of the empty value the buttons cannot move.
     onChange(next);
   };
-
-  const ordered = [...ranked, ...options.filter((option) => !ranked.includes(option.id)).map((option) => option.id)];
 
   return (
     <div className="flex flex-col gap-2" ref={fieldRef}>
@@ -41,6 +32,7 @@ export function RankingField({ field, value, onChange, disabled, fieldRef }: Bas
             <span className="flex-1 text-sm">{option.label}</span>
             <div className="flex gap-1">
               <button
+                aria-label={`Move ${option.label} up`}
                 className={cn(
                   "rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-accent",
                   disabled && "cursor-not-allowed opacity-50",
@@ -52,6 +44,7 @@ export function RankingField({ field, value, onChange, disabled, fieldRef }: Bas
                 ↑
               </button>
               <button
+                aria-label={`Move ${option.label} down`}
                 className={cn(
                   "rounded-md border border-border px-2 py-1 text-xs transition-colors hover:bg-accent",
                   disabled && "cursor-not-allowed opacity-50",

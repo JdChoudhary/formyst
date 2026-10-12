@@ -1,5 +1,15 @@
+import { FileJson, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { memo, useCallback } from "react";
+import {
+	Attachment,
+	AttachmentAction,
+	AttachmentActions,
+	AttachmentContent,
+	AttachmentDescription,
+	AttachmentMedia,
+	AttachmentTitle,
+} from "@/components/ui/attachment";
 import { Loader } from "@/components/ui/loader";
 
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -39,6 +49,8 @@ export const ChatPanel = memo(function ChatPanel({
 	deleteSession,
 	isDeletingSession,
 	isHydratingHistory,
+	attachedForm,
+	onDetachForm,
 }: ChatPanelProps) {
 	const shouldShowSuggestions = showSuggestions && messages.length === 0;
 
@@ -105,6 +117,29 @@ export const ChatPanel = memo(function ChatPanel({
 							onSuggestionClick={handleSuggestionClick}
 							suggestions={suggestions}
 						/>
+					</div>
+				)}
+				{attachedForm && (
+					<div className="mx-auto w-full max-w-3xl px-4 pb-3">
+						<Attachment className="w-full" state="done">
+							<AttachmentMedia>
+								<FileJson className="size-4" />
+							</AttachmentMedia>
+							<AttachmentContent>
+								<AttachmentTitle>{attachedForm.title}</AttachmentTitle>
+								<AttachmentDescription>
+									Form JSON · attached as context
+								</AttachmentDescription>
+							</AttachmentContent>
+							<AttachmentActions>
+								<AttachmentAction
+									aria-label={`Remove ${attachedForm.title} from context`}
+									onClick={onDetachForm}
+								>
+									<X className="size-4" />
+								</AttachmentAction>
+							</AttachmentActions>
+						</Attachment>
 					</div>
 				)}
 				<Separator />

@@ -35,7 +35,6 @@ export const formRouter = router({
     .query(async ({ input, ctx }) => {
       requireUser(ctx);
       return formService.getAll(ctx.user.id, {
-        folderId: input?.folderId,
         search: input?.search,
         publishedOnly: input?.publishedOnly,
       });

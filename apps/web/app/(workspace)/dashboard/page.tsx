@@ -11,40 +11,31 @@ import {
   Plus,
   Search,
   Clock,
-  Layers,
   ExternalLink,
   BarChart3,
-  FolderOpen,
   SlidersHorizontal,
   ArrowUpDown,
   LayoutGrid,
   LayoutList,
   Command,
   Sparkles,
-  User,
-  Users,
   Inbox,
   FileUp,
   Palette,
 } from "lucide-react";
 import { useGetForms } from "@/hooks/api/form";
 import { useSession } from "~/lib/auth-client";
-import { firstName, initials, formatDate } from "@/lib/workspace";
+import { firstName, formatDate } from "@/lib/workspace";
 import { FormActionsMenu } from "@/components/dashboard/forms-management/form-actions-menu";
 import { NewFormDialog } from "@/components/dashboard/forms-management/new-form-dialog";
-import { FolderSidebar } from "@/components/workspace/folder-sidebar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
@@ -270,21 +261,6 @@ export default function DashboardPage() {
 
       <Separator className="my-6" />
 
-      {/* ─── Folders ───────────────────────────────────────── */}
-      <section>
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Folders</h2>
-          <span className="text-xs text-muted-foreground">
-            Drag folders to organise them
-          </span>
-        </div>
-        <Card className="mt-3 p-3 shadow-none">
-          <FolderSidebar />
-        </Card>
-      </section>
-
-      <Separator className="my-6" />
-
       {/* ─── My Forms ──────────────────────────────────────── */}
       <section>
         <div className="flex items-center justify-between">
@@ -435,15 +411,6 @@ export default function DashboardPage() {
                       <Clock className="size-3" />
                       {formatDate(form.updatedAt)}
                     </span>
-                    {form.folderId && (
-                      <>
-                        <span className="text-border">·</span>
-                        <span className="flex items-center gap-1">
-                          <FolderOpen className="size-3" />
-                          Folder
-                        </span>
-                      </>
-                    )}
                   </div>
                 </div>
                 <StatusBadge status={form.status} />

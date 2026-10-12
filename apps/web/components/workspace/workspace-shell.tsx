@@ -1,58 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Layers, LayoutDashboard, Palette } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Layers } from "lucide-react";
 import { UserMenu } from "@/components/workspace/user-menu";
 
-type NavItem = {
-  label: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  exact?: boolean;
-};
-
-const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, exact: true },
-  { label: "Themes", href: "/dashboard/themes", icon: Palette, exact: true },
-];
-
-function WorkspaceNav() {
-  const pathname = usePathname();
-
-  return (
-    <nav aria-label="Workspace" className="flex items-center gap-1">
-      {NAV_ITEMS.map((item) => {
-        const Icon = item.icon;
-        const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
-        return (
-          <Link
-            aria-current={active ? "page" : undefined}
-            className={cn(
-              "flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium transition-colors",
-              active
-                ? "bg-accent text-foreground"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground",
-            )}
-            href={item.href}
-            key={item.href}
-          >
-            <Icon className="size-4" />
-            <span className="hidden sm:inline">{item.label}</span>
-          </Link>
-        );
-      })}
-    </nav>
-  );
-}
-
 /**
- * Workspace chrome: a slim top bar with brand, section links and the user menu.
+ * Workspace chrome: a slim top bar with the brand and the user menu.
  *
- * The previous left sidebar was retired — its folders tree, recent forms and
- * themes link now live on the dashboard itself. The folder tRPC routes and the
- * `folder-tree` components are untouched and still back the dashboard section.
+ * Section links (Dashboard / Themes) were removed from the header — navigation
+ * now lives on the dashboard itself.
  */
 export function WorkspaceShell({ children }: { children: React.ReactNode }) {
   return (
@@ -64,10 +20,6 @@ export function WorkspaceShell({ children }: { children: React.ReactNode }) {
           </span>
           <span className="hidden text-base font-bold tracking-tight sm:inline">Formyst</span>
         </Link>
-
-        <span className="mx-1 hidden h-5 w-px bg-border sm:block" />
-
-        <WorkspaceNav />
 
         <div className="ml-auto flex items-center gap-2">
           <UserMenu compact />

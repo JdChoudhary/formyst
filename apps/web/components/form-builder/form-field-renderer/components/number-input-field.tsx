@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 
 import type { BaseFieldProps } from "../types";
 
-import { applyBuilderMode, getBaseClasses, getBuilderMode } from "../utils";
+import { applyBuilderMode, getAnswerInputClasses, getBuilderMode } from "../utils";
 
 export function NumberInputField(props: BaseFieldProps) {
 	const { field, value, onChange, error, disabled } = props;
-	const baseClasses = getBaseClasses(field, error);
+	const baseClasses = getAnswerInputClasses(error);
 	const builderMode = getBuilderMode(props);
 
 	const getNumberPlaceholder = () =>
@@ -35,7 +35,7 @@ export function NumberInputField(props: BaseFieldProps) {
 
 	const inputProps = applyBuilderMode(
 		{
-			className: `flex gap-2 ${baseClasses}`,
+			className: `${baseClasses} h-12 text-lg`,
 			disabled,
 			id: field.ref,
 			name: field.ref,

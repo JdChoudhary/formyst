@@ -13,7 +13,7 @@ import {
 
 import type { BaseFieldProps } from "../types";
 
-import { getBaseClasses } from "../utils";
+import { getAnswerInputClasses } from "../utils";
 
 export function DateInputField({
 	field,
@@ -22,7 +22,7 @@ export function DateInputField({
 	error,
 	disabled,
 }: BaseFieldProps) {
-	const baseClasses = getBaseClasses(field, error);
+	const baseClasses = getAnswerInputClasses(error);
 	const [timeZone, setTimeZone] = React.useState<string | undefined>(undefined);
 
 	React.useEffect(() => {
@@ -64,7 +64,7 @@ export function DateInputField({
 			<PopoverTrigger
 				render={
 					<Button
-						className={`w-full justify-start text-left font-normal data-[empty=true]:text-muted-foreground ${baseClasses}`}
+						className={`h-12 w-full justify-start text-left text-lg font-normal data-[empty=true]:text-muted-foreground ${baseClasses}`}
 						data-empty={!dateValue}
 						disabled={disabled}
 						onKeyDown={handleDateInputKeyDown}

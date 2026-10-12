@@ -1,5 +1,4 @@
 import { FormPreview } from "@/components/form-builder/form-preview";
-import { useCreateForm } from "@/hooks/api/form";
 import { toast } from "sonner";
 
 import type { PreviewPanelProps } from "@/lib/ai-builder/types";
@@ -12,17 +11,14 @@ export function PreviewPanel({
 	router,
 	setShowJsonModal,
 	activeForm,
+	onUseForm,
+	isUsingForm,
 }: PreviewPanelProps) {
-	const { createForm, isPending: isCreating } = useCreateForm();
-
 	const handleUseForm = async () => {
-		if (!activeForm?.schema || isCreating) return;
+		if (!activeForm?.schema || isUsingForm) return;
 		try {
-			const created = await createForm({
-				title: activeForm.schema.title || "AI generated form",
-				schema: activeForm.schema,
-			});
-			router.push(`/form-builder/${created.id}`);
+			const result = await onUseForm(activeForm);
+			if (result?.route) router.push(result.route);
 		} catch (error) {
 			toast.error(error instanceof Error ? error.message : "Failed to use this form");
 		}
@@ -35,6 +31,7 @@ export function PreviewPanel({
 				activeFormId={activeFormId}
 				forms={forms}
 				isMobile={true}
+				isUsingForm={isUsingForm}
 				onUseForm={handleUseForm}
 				setActiveFormId={setActiveFormId}
 				setShowJsonModal={setShowJsonModal}
@@ -44,6 +41,7 @@ export function PreviewPanel({
 				activeFormId={activeFormId}
 				forms={forms}
 				isMobile={false}
+				isUsingForm={isUsingForm}
 				onUseForm={handleUseForm}
 				setActiveFormId={setActiveFormId}
 				setShowJsonModal={setShowJsonModal}

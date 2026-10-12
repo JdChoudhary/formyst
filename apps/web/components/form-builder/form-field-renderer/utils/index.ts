@@ -1,49 +1,19 @@
-import type { FormField } from "@repo/shared";
-import type { FieldSize, FieldVariant, FieldWidth } from "../types";
+/**
+ * Answer inputs draw a single bottom rule instead of a full box, so a form
+ * reads like a page of underlined answers rather than a stack of boxes.
+ *
+ * The side-specific widths are deliberate: the `Input`/`Textarea` primitives
+ * supply an all-sides `border`, and Tailwind emits `border-b` *after* it, so
+ * the bottom rule wins without needing `!important`.
+ */
+export const getAnswerInputClasses = (error?: string) => {
+	const base =
+		"rounded-none border-0 border-x-0 border-t-0 border-b bg-transparent px-0 shadow-none " +
+		"transition-colors focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-transparent";
 
-export const getWidthClass = (width?: FieldWidth) => {
-	switch (width) {
-		case "half":
-			return "flex-1 basis-1/2";
-		case "third":
-			return "flex-1 basis-1/3";
-		case "quarter":
-			return "flex-1 basis-1/4";
-		default:
-			return "flex-1 basis-full";
-	}
-};
-
-export const getSizeClasses = (size?: FieldSize) => {
-	switch (size) {
-		case "sm":
-			return "text-sm gap-2 h-8";
-		case "lg":
-			return "text-lg gap-4 h-14";
-		default:
-			return "gap-3 h-10";
-	}
-};
-
-export const getVariantClasses = (variant?: FieldVariant) => {
-	switch (variant) {
-		case "filled":
-			return "bg-muted/50 border-muted";
-		case "ghost":
-			return "bg-transparent border-transparent ";
-		case "underline":
-			return "rounded-none border-0 border-b-2 border-border bg-transparent gap-0 py-2  focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-b-2 focus-visible:border-border text-inherit placeholder:text-muted-foreground";
-		default:
-			return "";
-	}
-};
-
-export const getBaseClasses = (field: FormField, error?: string) => {
-	const errorClasses = error
-		? "border-destructive focus:border-destructive"
-		: "";
-
-	return errorClasses;
+	return error
+		? `${base} border-b-destructive focus-visible:border-b-destructive`
+		: `${base} border-b-input/70 hover:border-b-foreground/40 focus-visible:border-b-primary`;
 };
 
 export const getErrorClasses = (error?: string) =>

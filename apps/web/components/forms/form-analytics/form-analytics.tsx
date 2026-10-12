@@ -415,6 +415,7 @@ export function FormAnalytics({ form }: FormAnalyticsProps) {
 										const preview = schemaFields
 											.map((field) => ({
 												ref: field.ref ?? "",
+												field,
 												question: field.title || field.ref || "Question",
 												value: submission.submission_data[field.ref ?? ""],
 											}))
@@ -507,6 +508,7 @@ export function FormAnalytics({ form }: FormAnalyticsProps) {
 																			<span className="min-w-0 truncate text-foreground">
 																				<AnswerValue
 																					answers={submission.submission_data}
+																					field={row.field}
 																					schema={form.schema}
 																					value={row.value}
 																				/>

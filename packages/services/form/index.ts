@@ -1,4 +1,4 @@
-import db, { and, desc, eq, ilike, isNull, sql } from "@repo/database";
+import db, { and, desc, eq, ilike, sql } from "@repo/database";
 import { form, formVersion, theme as themeTable } from "@repo/database";
 import { normalizeFormSchemaSafe, type Theme } from "@repo/shared";
 import { badRequestError, internalError, withUniqueConstraint } from "../errors";
@@ -50,7 +50,6 @@ export class FormService {
           .insert(form)
           .values({
             userId,
-            folderId: data.folderId ?? null,
             createdBy,
             title: data.title,
             description: data.description ?? null,
@@ -71,18 +70,8 @@ export class FormService {
     return this.getById(created.id, userId);
   }
 
-  async getAll(
-    userId: string,
-    filters?: { folderId?: string | null; search?: string; publishedOnly?: boolean },
-  ) {
+  async getAll(userId: string, filters?: { search?: string; publishedOnly?: boolean }) {
     const conditions = [eq(form.userId, userId)];
-    if (filters?.folderId !== undefined) {
-      if (filters.folderId === null) {
-        conditions.push(isNull(form.folderId));
-      } else {
-        conditions.push(eq(form.folderId, filters.folderId));
-      }
-    }
     if (filters?.search) {
       conditions.push(ilike(form.title, `%${filters.search}%`));
     }
@@ -158,11 +147,10 @@ export class FormService {
 
   async update(id: string, userId: string, data: UpdateFormInput) {
     const updates: Partial<
-      Pick<FormRow, "title" | "description" | "folderId" | "slug" | "themeId" | "themeUrl">
+      Pick<FormRow, "title" | "description" | "slug" | "themeId" | "themeUrl">
     > = {};
     if (data.title !== undefined) updates.title = data.title;
     if (data.description !== undefined) updates.description = data.description;
-    if (data.folderId !== undefined) updates.folderId = data.folderId;
     if (data.themeId !== undefined) updates.themeId = data.themeId;
     if (data.themeUrl !== undefined) updates.themeUrl = data.themeUrl;
     if (data.title) updates.slug = await this.generateUniqueSlug(userId, data.title, id);
@@ -202,7 +190,6 @@ export class FormService {
     const created = await this.create(userId, createdBy, {
       title: `${original.title} (Copy)`,
       description: original.description,
-      folderId: original.folderId,
       schema: schema ?? undefined,
     });
 

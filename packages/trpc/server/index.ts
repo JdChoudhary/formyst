@@ -3,7 +3,6 @@ import { router } from "./trpc";
 import { adminRouter } from "./routes/admin/route";
 import { aiBuilderRouter } from "./routes/ai-builder/route";
 import { healthRouter } from "./routes/health/route";
-import { folderRouter } from "./routes/folder/route";
 import { formRouter } from "./routes/form/route";
 import { responseRouter } from "./routes/response/route";
 import { themeRouter } from "./routes/theme/route";
@@ -12,7 +11,6 @@ export const serverRouter = router({
   admin: adminRouter,
   aiBuilder: aiBuilderRouter,
   health: healthRouter,
-  folder: folderRouter,
   form: formRouter,
   response: responseRouter,
   theme: themeRouter,

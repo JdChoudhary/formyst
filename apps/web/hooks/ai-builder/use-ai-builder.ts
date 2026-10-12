@@ -2,8 +2,15 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import { DRAFT_KEYS } from "@/components/form-builder/form-builder/constants";
+import { useUpdateForm } from "@/hooks/api/form";
+import {
+  type AIBuilderFormContext,
+  clearAIBuilderFormContext,
+  readAIBuilderFormContext,
+} from "@/lib/ai-builder/form-context";
+import type { AttachedForm, ChatMessage, FormSchema } from "@/lib/ai-builder/types";
 import { trpc } from "@/trpc/client";
-import type { ChatMessage, FormSchema } from "@/lib/ai-builder/types";
 
 /**
  * The AI builder, backed by the real `aiBuilder` tRPC router.
@@ -68,6 +75,14 @@ export function useAIBuilder() {
   const [streamError, setStreamError] = useState<string | null>(null);
   const [showJsonModal, setShowJsonModal] = useState(false);
 
+  const { updateForm } = useUpdateForm();
+  /**
+   * The form the user came from (form builder → "Use Kiko AI"). It seeds the
+   * context of the first message and decides where "Use this form" writes back.
+   */
+  const [sourceForm, setSourceForm] = useState<AIBuilderFormContext | null>(null);
+  const [isUsingForm, setIsUsingForm] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const streamingRef = useRef<HTMLDivElement | null>(null);
   /** Cancels the in-flight streaming request ("stop generating"). */
@@ -86,6 +101,15 @@ export function useAIBuilder() {
   }, []);
 
   useEffect(() => clearTimer, [clearTimer]);
+
+  // Pick up the form handed over from the builder, then drop it from storage so
+  // a later, unrelated visit starts without one. Both reads happen here rather
+  // than in a state initializer — like the session key below — so the
+  // server-rendered markup matches the first client render.
+  useEffect(() => {
+    setSourceForm(readAIBuilderFormContext());
+    clearAIBuilderFormContext();
+  }, []);
 
   // Restore the conversation key so a returning user continues the same chat.
   useEffect(() => {
@@ -317,13 +341,30 @@ export function useAIBuilder() {
 
   /**
    * The form the model should edit this turn: the previewed form, falling back
-   * to the newest one produced in the conversation. Sent as `currentSchema`
-   * so follow-ups ("add an email field") refine the real schema.
+   * to the newest one produced in the conversation, then to the form the user
+   * arrived with from the builder. Sent as `currentSchema` so the very first
+   * message is already grounded in that form, and follow-ups ("add an email
+   * field") refine the real schema instead of starting over.
    */
   const currentSchema = useMemo(
-    () => activeForm?.schema ?? forms[forms.length - 1]?.schema ?? null,
-    [activeForm, forms],
+    () => activeForm?.schema ?? forms[forms.length - 1]?.schema ?? sourceForm?.schema ?? null,
+    [activeForm, forms, sourceForm],
   );
+
+  /** The handed-over form, framed for the chat attachment UI. */
+  const attachedForm = useMemo<AttachedForm | null>(
+    () =>
+      sourceForm
+        ? {
+            formId: sourceForm.formId,
+            title: sourceForm.schema.title || "Untitled form",
+          }
+        : null,
+    [sourceForm],
+  );
+
+  /** Drop the attachment so it is neither sent as context nor written back. */
+  const detachAttachedForm = useCallback(() => setSourceForm(null), []);
 
   const handleSend = useCallback(
     (e: React.FormEvent<HTMLFormElement>) => {
@@ -399,10 +440,41 @@ export function useAIBuilder() {
     if (el) el.scrollTop = el.scrollHeight;
   }, []);
 
-  const handleUseForm = useCallback((form: FormSchema | undefined) => {
-    if (!form?.schema) return;
-    localStorage.setItem("importedFormSchema", JSON.stringify(form.schema));
-  }, []);
+  /**
+   * Hand the previewed form back to the form builder.
+   *
+   * Coming from the builder (`sourceForm.formId`), the generated schema
+   * replaces that form. A form generated from scratch opens as an unsaved
+   * draft, so nothing is persisted until the user saves it. Returns the route
+   * the caller should navigate to, or `null` when there is nothing to use.
+   */
+  const handleUseForm = useCallback(
+    async (form: FormSchema | undefined): Promise<{ route: string } | null> => {
+      if (!form?.schema) return null;
+
+      setIsUsingForm(true);
+      try {
+        const sourceFormId = sourceForm?.formId ?? null;
+        if (sourceFormId) {
+          await updateForm(sourceFormId, { schema: form.schema });
+          return { route: `/form-builder/${sourceFormId}` };
+        }
+
+        try {
+          window.localStorage.setItem(
+            DRAFT_KEYS.IMPORTED_FORM_SCHEMA,
+            JSON.stringify(form.schema),
+          );
+        } catch {
+          throw new Error("Could not load this form into the builder.");
+        }
+        return { route: "/form-builder?from=ai-builder" };
+      } finally {
+        setIsUsingForm(false);
+      }
+    },
+    [sourceForm, updateForm],
+  );
 
   const processInitialPrompt = useCallback((prompt?: string) => {
     if (prompt?.trim()) setInput(prompt.trim());
@@ -493,6 +565,9 @@ export function useAIBuilder() {
     setShowJsonModal,
     handleSend,
     handleUseForm,
+    isUsingForm,
+    attachedForm,
+    detachAttachedForm,
     processInitialPrompt,
     scrollToBottom,
     scrollStreamingToBottom,

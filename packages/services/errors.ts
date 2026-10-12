@@ -3,7 +3,7 @@
  *
  * Services used to signal failure with bare `Error`s and the tRPC routes then
  * guessed at an HTTP status by matching substrings of the message
- * (`message === "Folder not found"`, `message.startsWith("Cannot move")`, ...).
+ * (`message === "Form not found"`, `message.startsWith("Cannot publish")`, ...).
  * That silently turned real bugs into 500s and would break on any copy edit.
  *
  * Every service now throws a `ServiceError` carrying an explicit code, and the
@@ -21,7 +21,7 @@ export type ServiceErrorCode =
   | "INTERNAL";
 
 export interface ServiceErrorOptions {
-  /** Stable machine-readable detail, e.g. `"folder_not_found"`. */
+  /** Stable machine-readable detail, e.g. `"form_not_found"`. */
   reason?: string;
   /** Original error, preserved for logging. */
   cause?: unknown;

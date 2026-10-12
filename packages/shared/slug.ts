@@ -1,7 +1,7 @@
 /**
- * Slug generation, shared by forms and folders.
+ * Slug generation for forms.
  *
- * Both services used to carry their own copy of this pipeline and had drifted
+ * Services used to carry their own copy of this pipeline and had drifted
  * (one stripped underscores, the other did not), so the same title could
  * produce two different slugs depending on which service touched it.
  */

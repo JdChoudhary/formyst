@@ -67,6 +67,7 @@ export function SubmissionDetailsModal({
 	const rows = fields
 		.map((field) => ({
 			ref: field.ref ?? "",
+			field,
 			question: field.title || field.ref || "Untitled question",
 			answer: answers[field.ref ?? ""],
 		}))
@@ -75,7 +76,12 @@ export function SubmissionDetailsModal({
 	// Any stored value that no longer maps to a question.
 	const orphanRows = Object.entries(answers)
 		.filter(([key]) => !knownRefs.has(key))
-		.map(([key, value]) => ({ ref: key, question: key, answer: value }));
+		.map(([key, value]) => ({
+			ref: key,
+			field: null,
+			question: key,
+			answer: value,
+		}));
 
 	const allRows = [...rows, ...orphanRows];
 	const answeredCount = allRows.filter((row) => hasAnswerValue(row.answer)).length;
@@ -210,6 +216,7 @@ export function SubmissionDetailsModal({
 											{answered ? (
 												<AnswerValue
 													answers={answers}
+													field={row.field}
 													schema={form.schema}
 													value={row.answer}
 												/>

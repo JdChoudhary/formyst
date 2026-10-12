@@ -1,4 +1,5 @@
 import {
+  ArrowRight,
   Award,
   CheckCircle,
   Info,
@@ -20,14 +21,22 @@ interface QuizResultsProps {
   showDetailedResults?: boolean;
   allowRetake?: boolean;
   onRetake?: () => void;
+  /** Forward action — continues to the ending (redirect, new response, ...). */
+  onContinue?: () => void;
+  /** Label for the forward button. Defaults to "Continue". */
+  continueLabel?: string;
   customMessage?: string;
 }
+
+const DEFAULT_CONTINUE_LABEL = "Continue";
 
 export function QuizResults({
   result,
   showDetailedResults = true,
   allowRetake = false,
   onRetake,
+  onContinue,
+  continueLabel,
   customMessage,
 }: QuizResultsProps) {
   const {
@@ -128,12 +137,20 @@ export function QuizResults({
         </Badge>
 
         {}
-        {allowRetake && onRetake && (
-          <div className="mt-6">
-            <Button className="gap-2" onClick={onRetake} variant="outline">
-              <RotateCcw className="size-4" />
-              Retake Quiz
-            </Button>
+        {(onContinue || (allowRetake && onRetake)) && (
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            {onContinue && (
+              <Button className="gap-2" onClick={onContinue}>
+                {continueLabel || DEFAULT_CONTINUE_LABEL}
+                <ArrowRight className="size-4" />
+              </Button>
+            )}
+            {allowRetake && onRetake && (
+              <Button className="gap-2" onClick={onRetake} variant="outline">
+                <RotateCcw className="size-4" />
+                Retake Quiz
+              </Button>
+            )}
           </div>
         )}
       </Card>

@@ -18,6 +18,7 @@ import {
   Upload,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import type React from "react";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +32,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { writeAIBuilderFormContext } from "@/lib/ai-builder/form-context";
 import { cn } from "@/lib/utils";
 import { BuilderViewTabs } from "./builder-view-tabs";
 import type { FormBuilderHeaderProps } from "../types";
@@ -58,6 +60,7 @@ export const FormBuilderHeader: React.FC<FormBuilderHeaderProps> = ({
   onSave,
   onPreview,
 }) => {
+  const router = useRouter();
   const [editingTitle, setEditingTitle] = useState(false);
   const [draftTitle, setDraftTitle] = useState(formSchema.title);
   const titleInputRef = useRef<HTMLInputElement>(null);
@@ -70,6 +73,16 @@ export const FormBuilderHeader: React.FC<FormBuilderHeaderProps> = ({
     } else {
       setDraftTitle(formSchema.title);
     }
+  };
+
+  /**
+   * Hand the form being edited to the AI builder so Kiko starts from it.
+   * The current schema (unsaved edits included) travels with the chat; the
+   * form id lets "Use this form" write the result back into this same form.
+   */
+  const handleUseKikoAI = () => {
+    writeAIBuilderFormContext({ formId: formId ?? null, schema: formSchema });
+    router.push("/ai-builder");
   };
 
   const saveState = autoSaving || saving ? "saving" : hasUnsavedChanges ? "unsaved" : "saved";
@@ -224,7 +237,7 @@ export const FormBuilderHeader: React.FC<FormBuilderHeaderProps> = ({
 
               <DropdownMenuSeparator />
 
-              <DropdownMenuItem render={<Link href="/ai-builder" />}>
+              <DropdownMenuItem onClick={handleUseKikoAI}>
                 <Sparkles className="size-4" />
                 <span>Use Kiko AI</span>
               </DropdownMenuItem>

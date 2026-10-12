@@ -9,7 +9,6 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
-import { folder } from "./folder";
 import { theme } from "./theme";
 
 /**
@@ -27,8 +26,6 @@ export const form = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
-
-    folderId: uuid("folder_id").references(() => folder.id, { onDelete: "set null" }),
 
     /**
      * Provenance only — deliberately nullable with `set null` so deleting the
@@ -90,7 +87,6 @@ export const form = pgTable(
     // Serves the public "published form by slug" lookup directly.
     index("form_published_slug_idx").on(t.isPublished, t.slug),
     index("form_user_idx").on(t.userId),
-    index("form_folder_idx").on(t.folderId),
     index("form_created_by_idx").on(t.createdBy),
   ],
 );

@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -27,61 +26,59 @@ export function RadioField(props: BaseFieldProps) {
 	const getOptionValue = (option: { ref?: string; label: string }): string =>
 		option.ref ?? option.label;
 
+	// The group wrapper stays bare on purpose: every option draws its own border,
+	// so wrapping the set in a Card would add a second, redundant box around it.
 	const renderRadioOptions = () => {
 		return (
-			<Card className="border-0 p-0 shadow-none">
-				<CardContent className="p-0">
-					<RadioGroup
-						aria-describedby={
-							`${error ? errorId : ""}${description ? (error ? " " : "") + descId : ""}` ||
-							undefined
-						}
-						aria-labelledby={field.title ? labelId : undefined}
-						className={`flex flex-col gap-2.5 ${errorRingClasses}`}
-						disabled={disabled}
-						onValueChange={(next) => {
-							if (!disabled) onChange(next);
-						}}
-						value={value || ""}
-					>
-						{options.map((option, index) => {
-							const optionValue = getOptionValue(option);
-							if (!optionValue) return null;
-							const isSelected = (value || "") === optionValue;
+			<RadioGroup
+				aria-describedby={
+					`${error ? errorId : ""}${description ? (error ? " " : "") + descId : ""}` ||
+					undefined
+				}
+				aria-labelledby={field.title ? labelId : undefined}
+				className={`flex flex-col gap-2.5 ${errorRingClasses}`}
+				disabled={disabled}
+				onValueChange={(next) => {
+					if (!disabled) onChange(next);
+				}}
+				value={value || ""}
+			>
+				{options.map((option, index) => {
+					const optionValue = getOptionValue(option);
+					if (!optionValue) return null;
+					const isSelected = (value || "") === optionValue;
 
-							return (
-								<div
-									aria-checked={isSelected}
-									className={cn(
-										"flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3.5 transition-all",
-										isSelected
-											? "border-primary/60 bg-primary/5"
-											: "border-border hover:border-foreground/25 hover:bg-accent/50",
-										disabled && "cursor-not-allowed opacity-60",
-									)}
-									key={index}
-									onClick={() => {
-										if (!disabled) onChange(optionValue);
-									}}
-									role="radio"
-									tabIndex={disabled ? -1 : 0}
-									onKeyDown={(e) => {
-										if (!disabled && (e.key === "Enter" || e.key === " ")) {
-											e.preventDefault();
-											onChange(optionValue);
-										}
-									}}
-								>
-									<RadioGroupItem className="mt-0" value={optionValue} />
-									<Label className="flex flex-1 cursor-pointer items-center py-1 font-medium text-[15px]">
-										{option.label}
-									</Label>
-								</div>
-							);
-						})}
-					</RadioGroup>
-				</CardContent>
-			</Card>
+					return (
+						<div
+							aria-checked={isSelected}
+							className={cn(
+								"flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3.5 transition-all",
+								isSelected
+									? "border-primary/60 bg-primary/5"
+									: "border-border hover:border-foreground/25 hover:bg-accent/50",
+								disabled && "cursor-not-allowed opacity-60",
+							)}
+							key={index}
+							onClick={() => {
+								if (!disabled) onChange(optionValue);
+							}}
+							role="radio"
+							tabIndex={disabled ? -1 : 0}
+							onKeyDown={(e) => {
+								if (!disabled && (e.key === "Enter" || e.key === " ")) {
+									e.preventDefault();
+									onChange(optionValue);
+								}
+							}}
+						>
+							<RadioGroupItem className="mt-0" value={optionValue} />
+							<Label className="flex flex-1 cursor-pointer items-center py-1 font-medium text-[15px]">
+								{option.label}
+							</Label>
+						</div>
+					);
+				})}
+			</RadioGroup>
 		);
 	};
 

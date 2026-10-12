@@ -11,13 +11,20 @@ import {
 	FileText,
 	Globe,
 	Search,
+	Sparkles,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
 	Table,
 	TableBody,
@@ -28,7 +35,10 @@ import {
 } from "@/components/ui/table";
 import { toast } from "@/hooks/use-toast";
 import type { FormView, FormSubmissionView } from "@repo/shared";
+import { useAnalyticsChat, useAnalyticsData } from "../hooks";
 import { AnswerValue, RecallText } from "./answer-view";
+import { ChatModal } from "./chat-modal";
+import { FloatingChatButton } from "./floating-chat-button";
 import { SubmissionDetailsModal } from "./submission-details-modal";
 
 interface FormSubmissionsProps {
@@ -119,6 +129,33 @@ export function FormSubmissions({ form, submissions }: FormSubmissionsProps) {
 		useState<FormSubmissionView | null>(null);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);
+	const [isMobile, setIsMobile] = useState(false);
+
+	// Kiko AI answers questions about the same data the analytics page shows.
+	const analyticsData = useAnalyticsData(form, submissions);
+	const {
+		chatOpen,
+		setChatOpen,
+		chatMessages,
+		chatInput,
+		setChatInput,
+		chatLoading,
+		chatStreaming,
+		streamedContent,
+		messagesEndRef,
+		chatInputRef,
+		chatSuggestions,
+		abortController,
+		handleChatSend,
+		handleStopGeneration,
+	} = useAnalyticsChat(form, submissions, analyticsData);
+
+	useEffect(() => {
+		const checkMobile = () => setIsMobile(window.innerWidth < 768);
+		checkMobile();
+		window.addEventListener("resize", checkMobile);
+		return () => window.removeEventListener("resize", checkMobile);
+	}, []);
 
 	const filteredSubmissions = submissions.filter((submission) => {
 		if (!searchTerm) return true;
@@ -231,6 +268,24 @@ export function FormSubmissions({ form, submissions }: FormSubmissionsProps) {
 									<Download className="size-4" />
 									Export JSON
 								</Button>
+								<TooltipProvider>
+									<Tooltip>
+										<TooltipTrigger
+											render={
+												<Button
+													aria-label="Open Kiko AI"
+													onClick={() => setChatOpen(true)}
+													size="sm"
+													variant="outline"
+												>
+													<Sparkles aria-hidden="true" className="size-4 shrink-0" />
+													<span className="hidden sm:inline">Kiko&nbsp;AI</span>
+												</Button>
+											}
+										/>
+										<TooltipContent>AI form analytics</TooltipContent>
+									</Tooltip>
+								</TooltipProvider>
 								<Button
 									aria-label="View detailed analytics"
 									className="inline-flex items-center gap-2"
@@ -333,6 +388,7 @@ export function FormSubmissions({ form, submissions }: FormSubmissionsProps) {
 														<div className="line-clamp-2">
 															<AnswerValue
 																answers={submission.submission_data}
+																field={field}
 																schema={form.schema}
 																value={submission.submission_data[field.ref ?? ""]}
 															/>
@@ -402,6 +458,24 @@ export function FormSubmissions({ form, submissions }: FormSubmissionsProps) {
 				isOpen={isModalOpen}
 				onClose={() => setIsModalOpen(false)}
 				submission={selectedSubmission}
+			/>
+			<FloatingChatButton onClick={() => setChatOpen(true)} />
+			<ChatModal
+				abortController={abortController}
+				chatInput={chatInput}
+				chatInputRef={chatInputRef}
+				chatLoading={chatLoading}
+				chatMessages={chatMessages}
+				chatStreaming={chatStreaming}
+				chatSuggestions={chatSuggestions}
+				handleChatSend={handleChatSend}
+				handleStopGeneration={handleStopGeneration}
+				isMobile={isMobile}
+				isOpen={chatOpen}
+				messagesEndRef={messagesEndRef}
+				onClose={() => setChatOpen(false)}
+				setChatInput={setChatInput}
+				streamedContent={streamedContent}
 			/>
 		</div>
 	);

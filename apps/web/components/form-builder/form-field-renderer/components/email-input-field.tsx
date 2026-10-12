@@ -5,12 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { validateEmail } from "@/lib/validation/email-validation";
 import type { BaseFieldProps } from "../types";
-import { applyBuilderMode, getBaseClasses, getBuilderMode } from "../utils";
+import { applyBuilderMode, getAnswerInputClasses, getBuilderMode } from "../utils";
 
 export function EmailInputField(props: BaseFieldProps) {
 	const { field, value, onChange, error, disabled } = props;
 	const builderMode = getBuilderMode(props);
-	const baseClasses = getBaseClasses(field, error);
+	const baseClasses = getAnswerInputClasses(error);
 	const [inputValue, setInputValue] = useState(value || "");
 	const [showAutoComplete, setShowAutoComplete] = useState(false);
 	const [isValidating, setIsValidating] = useState(false);
@@ -191,7 +191,7 @@ export function EmailInputField(props: BaseFieldProps) {
 
 	const inputProps = applyBuilderMode(
 		{
-			className: `flex gap-2 ${baseClasses}`,
+			className: `${baseClasses} h-12 text-lg`,
 			disabled,
 			id: field.ref,
 			name: field.ref,

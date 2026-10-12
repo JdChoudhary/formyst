@@ -6,9 +6,6 @@ import db from "@repo/database";
 import { env } from "./env";
 import { createAuthMiddleware } from "better-auth/api";
 import { logger } from "@repo/logger";
-import { FolderService } from "@repo/services/folder";
-
-const folderService = new FolderService();
 
 export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
@@ -90,21 +87,6 @@ export const auth = betterAuth({
       }
     }),
   },
-  databaseHooks: {
-    // user: {
-    //   create: {
-    //     after: async (userRecord) => {
-    //       try {
-    //         // Every user owns their workspace now, so seed the default
-    //         // folders directly against the user id.
-    //         await folderService.createDefaults(userRecord.id);
-    //       } catch (err) {
-    //         logger.error(`[DEFAULT FOLDERS FAILED] User: ${userRecord.email}`, err);
-    //       }
-    //     },
-    //   },
-    },
-  // },
 });
 
 export type Session = typeof auth.$Infer.Session;

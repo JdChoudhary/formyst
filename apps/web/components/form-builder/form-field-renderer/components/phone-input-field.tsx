@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { validatePhoneNumber } from "@/lib/validation/phone-validation";
 import type { BaseFieldProps } from "../types";
-import { getBaseClasses } from "../utils";
+import { getAnswerInputClasses } from "../utils";
 
 export function PhoneInputField({
 	field,
@@ -12,7 +12,7 @@ export function PhoneInputField({
 	error,
 	disabled,
 }: BaseFieldProps) {
-	const baseClasses = getBaseClasses(field, error);
+	const baseClasses = getAnswerInputClasses(error);
 	const [inputValue, setInputValue] = useState(value || "");
 	const [isValidating, setIsValidating] = useState(false);
 
@@ -54,7 +54,7 @@ export function PhoneInputField({
 		<div className="flex flex-col gap-2">
 			<Input
 				autoComplete="tel"
-				className={`flex gap-2 ${baseClasses}`}
+				className={`${baseClasses} h-12 text-lg`}
 				disabled={disabled}
 				id={field.ref}
 				inputMode="tel"

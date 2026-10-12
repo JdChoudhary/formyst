@@ -4,40 +4,17 @@ import { CornerDownRight } from "lucide-react";
 import { Fragment, useMemo } from "react";
 
 import { cn } from "@/lib/utils";
-import type { FormSchema } from "@repo/shared";
+import { answerToLabels, formatAnswer, hasAnswerValue } from "@/lib/forms/answers";
+import type { FormField, FormSchema } from "@repo/shared";
 
 /* -------------------------------------------------------------------------- */
 /* Answer formatting                                                          */
 /* -------------------------------------------------------------------------- */
 
-export function hasAnswerValue(value: unknown): boolean {
-	if (value === null || value === undefined || value === "") return false;
-	if (Array.isArray(value)) return value.length > 0;
-	return true;
-}
-
-/**
- * Turn any stored answer into a single human-readable string.
- * Handles choice objects (`{ label }`), attachments, booleans and arrays.
- */
-export function formatAnswer(value: unknown): string {
-	if (!hasAnswerValue(value)) return "—";
-	if (Array.isArray(value)) return value.map((item) => formatAnswer(item)).join(", ");
-	if (typeof value === "boolean") return value ? "Yes" : "No";
-	if (typeof value === "object" && value !== null) {
-		const obj = value as Record<string, unknown>;
-		if (typeof obj.label === "string") return obj.label;
-		if (typeof obj.title === "string") return obj.title;
-		if (typeof obj.name === "string") return obj.name;
-		if (typeof obj.value !== "undefined") return formatAnswer(obj.value);
-		try {
-			return JSON.stringify(value);
-		} catch {
-			return "—";
-		}
-	}
-	return String(value);
-}
+// Stored answers are resolved against their field (choice refs → labels,
+// contact objects → readable text) in `@/lib/forms/answers`, which is unit
+// tested without a DOM. Re-exported here for the analytics components.
+export { answerToLabels, formatAnswer, hasAnswerValue };
 
 /* -------------------------------------------------------------------------- */
 /* Recall token parsing                                                       */
@@ -104,11 +81,11 @@ function resolveReference(
 	switch (reference.type) {
 		case "field": {
 			const field = schema?.fields?.find((item) => item.ref === reference.key);
-			const { answer, empty } = resolveAnswer(reference.key);
+			const value = reference.key ? answers?.[reference.key] : undefined;
 			return {
 				question: field?.title || reference.key || "Untitled question",
-				answer,
-				empty,
+				answer: formatAnswer(value, field),
+				empty: !hasAnswerValue(value),
 			};
 		}
 		case "variable":
@@ -291,6 +268,8 @@ export function RecallText({
 
 interface AnswerValueProps {
 	value: unknown;
+	/** The question this value belongs to — used to resolve choice refs. */
+	field?: FormField | null;
 	schema?: FormSchema | null;
 	answers?: Record<string, unknown> | null;
 	className?: string;
@@ -304,6 +283,7 @@ interface AnswerValueProps {
  */
 export function AnswerValue({
 	value,
+	field,
 	schema,
 	answers,
 	className,
@@ -342,7 +322,7 @@ export function AnswerValue({
 							className="inline-flex max-w-full items-center rounded-md border border-border bg-muted px-2 py-0.5 text-xs"
 							key={index}
 						>
-							<span className="truncate">{formatAnswer(item)}</span>
+							<span className="truncate">{formatAnswer(item, field)}</span>
 						</span>
 					))}
 				</span>
@@ -352,9 +332,11 @@ export function AnswerValue({
 
 	if (typeof value === "string") {
 		return (
-			<span className={cn("whitespace-pre-wrap", className)}>{value}</span>
+			<span className={cn("whitespace-pre-wrap", className)}>
+				{formatAnswer(value, field)}
+			</span>
 		);
 	}
 
-	return <span className={className}>{formatAnswer(value)}</span>;
+	return <span className={className}>{formatAnswer(value, field)}</span>;
 }

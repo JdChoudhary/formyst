@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import {
 	Select,
 	SelectContent,
@@ -12,12 +11,12 @@ import {
 
 import type { BaseFieldProps } from "../types";
 
-import { applyBuilderMode, getBuilderMode, getErrorClasses } from "../utils";
+import { applyBuilderMode, getAnswerInputClasses, getBuilderMode } from "../utils";
 
 export function SelectField(props: BaseFieldProps) {
 	const { field, value, onChange, error, disabled } = props;
 	const builderMode = getBuilderMode(props);
-	const errorClasses = getErrorClasses(error);
+	const errorClasses = getAnswerInputClasses(error);
 
 	const options = field.properties?.choices ?? [];
 
@@ -46,30 +45,26 @@ export function SelectField(props: BaseFieldProps) {
 		);
 
 		return (
-			<Card className="border-0 p-0 shadow-none">
-				<CardContent className="p-0">
-					<Select {...selectProps}>
-						<SelectTrigger
-							{...selectTriggerProps}
-							className="h-12"
-						>
-							<SelectValue placeholder={getPlaceholder()} />
-						</SelectTrigger>
-						<SelectContent>
-							{options
-								.filter((option) => option.label.trim() !== "")
-								.map((option, index) => (
-									<SelectItem
-										key={index}
-										value={option.ref ?? option.label}
-									>
-										{option.label}
-									</SelectItem>
-								))}
-						</SelectContent>
-					</Select>
-				</CardContent>
-			</Card>
+			<Select {...selectProps}>
+				<SelectTrigger
+					{...selectTriggerProps}
+					className="h-12 w-full pr-8 text-lg"
+				>
+					<SelectValue placeholder={getPlaceholder()} />
+				</SelectTrigger>
+				<SelectContent>
+					{options
+						.filter((option) => option.label.trim() !== "")
+						.map((option, index) => (
+							<SelectItem
+								key={index}
+								value={option.ref ?? option.label}
+							>
+								{option.label}
+							</SelectItem>
+						))}
+				</SelectContent>
+			</Select>
 		);
 	};
 

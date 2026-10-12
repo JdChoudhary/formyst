@@ -22,6 +22,16 @@ export interface ChatSuggestion {
   icon: React.ReactNode;
 }
 
+/**
+ * A form handed to the chat from the builder ("Use Kiko AI"). It is surfaced
+ * as an attachment on the conversation and sent as context with each message.
+ */
+export interface AttachedForm {
+  /** The saved form it came from, or `null` for a new, unsaved form. */
+  formId: string | null;
+  title: string;
+}
+
 /** A persisted conversation, as listed by `aiBuilder.listSessions`. */
 export interface ChatSession {
   id: string;
@@ -66,6 +76,10 @@ export interface ChatPanelProps {
   isDeletingSession: boolean;
   /** True while a saved conversation's history is being fetched. */
   isHydratingHistory: boolean;
+  /** The form attached from the builder, shown above the composer. */
+  attachedForm: AttachedForm | null;
+  /** Detach the form so it stops being sent as context. */
+  onDetachForm: () => void;
 }
 
 export interface PreviewPanelProps {
@@ -75,4 +89,11 @@ export interface PreviewPanelProps {
   router: { push: (href: string) => void };
   setShowJsonModal: (show: boolean) => void;
   activeForm: FormSchema | undefined;
+  /**
+   * Hand the previewed form back to the builder and return the route to open.
+   * Replaces the form the chat started from, or loads an unsaved draft.
+   */
+  onUseForm: (form: FormSchema | undefined) => Promise<{ route: string } | null>;
+  /** True while "Use this form" is writing the form back. */
+  isUsingForm: boolean;
 }

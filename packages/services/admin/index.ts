@@ -182,7 +182,6 @@ export class AdminService {
       .select({
         id: form.id,
         userId: form.userId,
-        folderId: form.folderId,
         title: form.title,
         slug: form.slug,
         description: form.description,
@@ -207,7 +206,6 @@ export class AdminService {
     return {
       id: row.id,
       userId: row.userId,
-      folderId: row.folderId,
       title: row.title,
       slug: row.slug,
       description: row.description,

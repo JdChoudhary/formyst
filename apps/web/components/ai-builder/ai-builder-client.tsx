@@ -52,6 +52,9 @@ export function AIBuilderClient() {
 		setShowJsonModal,
 		handleSend,
 		handleUseForm,
+		isUsingForm,
+		attachedForm,
+		detachAttachedForm,
 		processInitialPrompt,
 		scrollToBottom,
 		scrollStreamingToBottom,
@@ -120,6 +123,8 @@ export function AIBuilderClient() {
 			deleteSession,
 			isDeletingSession,
 			isHydratingHistory,
+			attachedForm,
+			onDetachForm: detachAttachedForm,
 		}),
 		[
 			messages,
@@ -146,6 +151,8 @@ export function AIBuilderClient() {
 			deleteSession,
 			isDeletingSession,
 			isHydratingHistory,
+			attachedForm,
+			detachAttachedForm,
 		]
 	);
 
@@ -191,6 +198,8 @@ export function AIBuilderClient() {
 									activeForm={activeForm}
 									activeFormId={activeFormId}
 									forms={forms}
+									isUsingForm={isUsingForm}
+									onUseForm={handleUseForm}
 									router={router}
 									setActiveFormId={setActiveFormId}
 									setShowJsonModal={setShowJsonModal}
@@ -213,6 +222,8 @@ export function AIBuilderClient() {
 							activeForm={activeForm}
 							activeFormId={activeFormId}
 							forms={forms}
+							isUsingForm={isUsingForm}
+							onUseForm={handleUseForm}
 							router={router}
 							setActiveFormId={setActiveFormId}
 							setShowJsonModal={setShowJsonModal}

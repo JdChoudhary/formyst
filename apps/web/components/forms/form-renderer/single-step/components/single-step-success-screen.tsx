@@ -45,7 +45,7 @@ export const SingleStepSuccessScreen: React.FC<SingleStepSuccessScreenProps> = (
   const dividerText = thankyouProps.divider_text?.trim();
   const { customStyles } = useFormStyling(schema);
 
-  const quizSettings = (schema.settings as any)?.quiz;
+  const quizSettings = schema.settings?.quiz;
   const shouldShowQuizResults =
     quizSettings?.enabled &&
     (quizSettings?.showScore !== false || quizSettings?.showCorrectAnswers !== false) &&
@@ -101,12 +101,20 @@ export const SingleStepSuccessScreen: React.FC<SingleStepSuccessScreenProps> = (
         {shouldShowQuizResults ? (
           <QuizResults
             allowRetake={quizSettings?.allowRetake === true}
-            result={quizResults}
-            showDetailedResults={quizSettings?.showCorrectAnswers !== false}
+            continueLabel={redirectUrl ? "Continue" : "Submit another response"}
             customMessage={quizResultMessage}
+            onContinue={() => {
+              if (redirectUrl) {
+                window.location.href = redirectUrl;
+              } else {
+                window.location.reload();
+              }
+            }}
             onRetake={() => {
               window.location.reload();
             }}
+            result={quizResults}
+            showDetailedResults={quizSettings?.showCorrectAnswers !== false}
           />
         ) : (
           <Card
